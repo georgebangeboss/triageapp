@@ -31,8 +31,8 @@ class MapScreenState extends State<ProfilePage>
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 25.0),
                       child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAligignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                               padding: EdgeInsets.only(
