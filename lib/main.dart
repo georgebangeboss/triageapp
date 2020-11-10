@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
+import 'package:rental_ui/MpesaKeys.dart';
 import 'package:rental_ui/widgets/ChatItemWidget.dart';
 import 'package:rental_ui/widgets/InputWidget.dart';
 import 'package:rental_ui/widgets/ProgressSummary.dart';
@@ -7,6 +9,8 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rental_ui/widgets/UserProfile.dart';
 
 void main() {
+  MpesaFlutterPlugin.setConsumerKey(savedKey);
+  MpesaFlutterPlugin.setConsumerSecret(savedSecret);
   runApp(MyApp());
 }
 
@@ -218,12 +222,48 @@ class HomePage extends StatelessWidget {
               ),
               onPressed: () {
                 print('pressed');
-                //TODO initiate Mpesa STK push
+                makeMpesaPayment();
               },
             ),
           )
         ],
       );
+  }
+
+  void makeMpesaPayment() {
+    //TODO
+    //fetch the registration phone number of the logged in tenant
+    //get the Landlord's paybill or phone number and stick it to GUI
+    //set amount you are paying
+    //calculate balance that is due from database records
+    //live show the due rent as you input the amount
+    makeSTKPush('254769123105', 500.0, 'June Rent'); //dummy args passed
+  }
+}
+
+makeSTKPush(String  tenantPhone, double amount,String monthOfTheYear) async{
+  dynamic transactionInitialisation;
+  try {
+    transactionInitialisation =
+        await MpesaFlutterPlugin.initializeMpesaSTKPush(
+        businessShortCode: '174379',
+        transactionType: TransactionType.CustomerPayBillOnline,
+        amount: amount,
+        partyA: tenantPhone,
+        partyB: '174379',
+        callBackURL: Uri(), //TODO handle backend and database
+        accountReference:monthOfTheYear,
+        phoneNumber: tenantPhone,
+        baseUri: Uri(scheme:'https' ,host: 'sandbox.safaricom.co.ke'),
+        transactionDesc: 'mock stk push',
+        passKey:'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
+
+    //TODO transactionInitialization is a HashMap What to do with it?
+
+  } catch (e) {
+    //you can implement your exception handling here.
+    //Network unreachability is a sure exception.
+    print(e.getMessage());
   }
 }
 
