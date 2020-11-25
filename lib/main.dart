@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
-import 'package:rental_ui/MpesaKeys.dart';
+import 'file:///C:/Users/admin/AndroidStudioProjects/rental-mobile/lib/constants/mpesa_keys.dart';
 import 'package:rental_ui/widgets/ChatItemWidget.dart';
 import 'package:rental_ui/widgets/InputWidget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -229,8 +229,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-void makeSTKPush(
-    String tenantPhone, double amount, String monthOfTheYear) async {
+Future<dynamic> makeSTKPush(String  tenantPhone, double amount,String monthOfTheYear) async{
   dynamic transactionInitialisation;
   try {
     transactionInitialisation = await MpesaFlutterPlugin.initializeMpesaSTKPush(
@@ -247,7 +246,7 @@ void makeSTKPush(
         passKey:
             'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
 
-    //TODO transactionInitialization is a HashMap What to do with it?
+    //TODO transactionInitialisation is a HashMap. What to do with it?
 
   } catch (e) {
     //you can implement your exception handling here.
