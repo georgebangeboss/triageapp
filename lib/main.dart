@@ -4,8 +4,8 @@ import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
 import 'file:///C:/Users/admin/AndroidStudioProjects/rental-mobile/lib/constants/mpesa_keys.dart';
 import 'package:rental_ui/widgets/ChatItemWidget.dart';
 import 'package:rental_ui/widgets/InputWidget.dart';
-import 'package:rental_ui/widgets/ProgressSummary.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:rental_ui/widgets/PaymentsTab.dart';
 import 'package:rental_ui/widgets/UserProfile.dart';
 
 void main() {
@@ -103,32 +103,27 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           selectedLabelStyle: TextStyle(color: Colors.black),
-          selectedIconTheme: IconThemeData(
-            color: Colors.white
-          ),
-          unselectedIconTheme: IconThemeData(
-            color: Color(0xffA8DADC)
-          ),
+          selectedIconTheme: IconThemeData(color: Colors.white),
+          unselectedIconTheme: IconThemeData(color: Color(0xffA8DADC)),
 
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
-                backgroundColor: Color(0xff1976d2),
-                ),
+              icon: Icon(Icons.home),
+              label: "Home",
+              backgroundColor: Color(0xff1976d2),
+            ),
             BottomNavigationBarItem(
                 icon: Icon(Icons.receipt),
-                label:'Reports',
-              backgroundColor: Colors.green
-                ),
+                label: 'Reports',
+                backgroundColor: Colors.green),
             BottomNavigationBarItem(
-                icon: Icon(Icons.message),
-                label: 'Feedback',
-                ),
+              icon: Icon(Icons.message),
+              label: 'Feedback',
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-                )
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            )
           ],
           elevation: 20,
           //selectedItemColor: Colors.blue,
@@ -150,84 +145,75 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        // Column is also a layout widget. It takes a list of children and
-        // arranges them vertically. By default, it sizes itself to fit its
-        // children horizontally, and tries to be as tall as its parent.
-        //
-        // Invoke "debug painting" (press "p" in the console, choose the
-        // "Toggle Debug Paint" action from the Flutter Inspector in Android
-        // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-        // to see the wireframe for each widget.
-        //
-        // Column has various properties to control how it sizes itself and
-        // how it positions its children. Here we use mainAxisAlignment to
-        // center the children vertically; the main axis here is the vertical
-        // axis because Columns are vertical (the cross axis would be
-        // horizontal).
-      mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RichText(
-            text: TextSpan(style: optionStyle, children: [
-              TextSpan(
-                  text: 'Isaac Kinuthia',
-                  style: optionStyle.copyWith(
-                      color: Colors.black,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold)),
-            ]),
-          ),
-          Text('House 12', style: optionStyle,),
-          Container(
-            margin: EdgeInsets.only(left: 10),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DashboardCard(title: 'Rent', paidAmount: 15000, balance: 5000, progressBarColor: Color(0xffFF9800),),
-                DashboardCard(title: 'Garbage', paidAmount: 500, balance: 500, progressBarColor: Color(0xff4caf50), cardColor: Colors.orange,),
-              ],
+    return ListView(children: [
+      RichText(
+        text: TextSpan(style: optionStyle, children: [
+          TextSpan(
+              text: 'Isaac Kinuthia',
+              style: optionStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold)),
+        ]),
+      ),
+      Text(
+        'House 12',
+        style: optionStyle,
+      ),
+      DashboardCard(
+        title: 'Rent',
+        paidAmount: 15000,
+        balance: 5000,
+        progressBarColor: Color(0xffFF9800),
+      ),
+      DashboardCard(
+        title: 'Garbage',
+        paidAmount: 500,
+        balance: 500,
+        progressBarColor: Color(0xff4caf50),
+        cardColor: Colors.orange,
+      ),
+
+      DashboardCard(
+        title: 'Water',
+        paidAmount: 15000,
+        balance: 5000,
+        progressBarColor: Color(0xff2196f3),
+        cardColor: Colors.white,
+      ),
+      DashboardCard(
+        title: 'Electricity',
+        paidAmount: 500,
+        balance: 500,
+        progressBarColor: Colors.red,
+        cardColor: Color(0xff2196f3),
+      ),
+
+      //DashboardCard(title: 'Utilities', paidAmount: 500, balance: 500, progressBarColor: Colors.green,),
+      //CardSummary(),
+      //CardSummary(),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: FlatButton(
+          color: Color(0xff2196f3),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              'Make Payment',
+              style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(left: 10, top: 20),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              verticalDirection: VerticalDirection.down,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DashboardCard(title: 'Water', paidAmount: 15000, balance: 5000, progressBarColor: Color(0xff2196f3),cardColor: Colors.white,),
-                DashboardCard(title: 'Electricity', paidAmount: 500, balance: 500, progressBarColor: Colors.red, cardColor:  Color(0xff2196f3),),
-              ],
-            ),
-          ),
-          //DashboardCard(title: 'Utilities', paidAmount: 500, balance: 500, progressBarColor: Colors.green,),
-          //CardSummary(),
-          //CardSummary(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: FlatButton(
-              color: Color(0xff2196f3),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Make Payment', style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white
-                ),),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)
-              ),
-              onPressed: () {
-                print('pressed');
-                makeMpesaPayment();
-              },
-            ),
-          )
-        ],
-      );
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          onPressed: () {
+            print('pressed');
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return PaymentTab();
+            }));
+          },
+        ),
+      )
+    ]);
   }
 
   void makeMpesaPayment() {
@@ -237,26 +223,28 @@ class HomePage extends StatelessWidget {
     //set amount you are paying
     //calculate balance that is due from database records
     //live show the due rent as you input the amount
-    makeSTKPush('254769123105', 500.0, 'June Rent'); //dummy args passed
+    //Take user to Payments Page
+
+    makeSTKPush('254701447794', 500.0, 'June Rent'); //dummy args passed
   }
 }
 
 Future<dynamic> makeSTKPush(String  tenantPhone, double amount,String monthOfTheYear) async{
   dynamic transactionInitialisation;
   try {
-    transactionInitialisation =
-        await MpesaFlutterPlugin.initializeMpesaSTKPush(
+    transactionInitialisation = await MpesaFlutterPlugin.initializeMpesaSTKPush(
         businessShortCode: '174379',
         transactionType: TransactionType.CustomerPayBillOnline,
         amount: amount,
         partyA: tenantPhone,
         partyB: '174379',
         callBackURL: Uri(), //TODO handle backend and database
-        accountReference:monthOfTheYear,
+        accountReference: monthOfTheYear,
         phoneNumber: tenantPhone,
-        baseUri: Uri(scheme:'https' ,host: 'sandbox.safaricom.co.ke'),
+        baseUri: Uri(scheme: 'https', host: 'sandbox.safaricom.co.ke'),
         transactionDesc: 'mock stk push',
-        passKey:'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
+        passKey:
+            'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
 
     //TODO transactionInitialisation is a HashMap. What to do with it?
 
@@ -272,65 +260,67 @@ class DashboardCard extends StatelessWidget {
   final double paidAmount, balance;
   final Color progressBarColor;
   final Color cardColor;
-  const DashboardCard({
-    Key key, this.title, this.paidAmount, this.balance, this.progressBarColor, this.cardColor
-  }) : super(key: key);
+  const DashboardCard(
+      {Key key,
+      this.title,
+      this.paidAmount,
+      this.balance,
+      this.progressBarColor,
+      this.cardColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double _progress = this.paidAmount/(this.balance+this.paidAmount);
+    double _progress = this.paidAmount / (this.balance + this.paidAmount);
     print(_progress);
     return Card(
-      elevation: 10,
+      elevation: 0,
       color: cardColor,
-      margin: EdgeInsets.symmetric(horizontal: 5),
-      child: Container(
-        width: 185,
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularPercentIndicator(
-                radius: 90.0,
-                lineWidth: 8.0,
-                animation: true,
-                percent: _progress,
-                center: new Text(
-                  "${(_progress*100).toInt()}%",
-                  style: new TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20.0),
-                ),
-                circularStrokeCap: CircularStrokeCap.round,
-                progressColor: this.progressBarColor,
+      margin: EdgeInsets.only(left: 5, right: 5, top: 15),
+      child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularPercentIndicator(
+              radius: 90.0,
+              lineWidth: 8.0,
+              animation: true,
+              percent: _progress,
+              center: new Text(
+                "${(_progress * 100).toInt()}%",
+                style:
+                    new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
-              Container(margin: EdgeInsets.only(left: 6),child: Text(title,style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14
-              ),))
-              // SizedBox(
-              //   height: 100,
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         this.title,
-              //         style: TextStyle(
-              //             fontFamily: 'PTSans',
-              //             fontSize: 20,
-              //             color: Colors.black87,
-              //             fontWeight: FontWeight.bold),
-              //       ),
-              //       Text('Kshs. ${this.paidAmount} Paid', softWrap: true,),
-              //       Text('Balance: Kshs. ${this.balance}', softWrap: true,)
-              //     ],
-              //   ),
-              // ),
-
-            ]),
-      ),
+              circularStrokeCap: CircularStrokeCap.round,
+              progressColor: this.progressBarColor,
+            ),
+            Container(
+                margin: EdgeInsets.only(left: 6),
+                child: Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ))
+            // SizedBox(
+            //   height: 100,
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         this.title,
+            //         style: TextStyle(
+            //             fontFamily: 'PTSans',
+            //             fontSize: 20,
+            //             color: Colors.black87,
+            //             fontWeight: FontWeight.bold),
+            //       ),
+            //       Text('Kshs. ${this.paidAmount} Paid', softWrap: true,),
+            //       Text('Balance: Kshs. ${this.balance}', softWrap: true,)
+            //     ],
+            //   ),
+            // ),
+          ]),
     );
   }
 }
