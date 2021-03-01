@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
-import 'file:///C:/Users/admin/AndroidStudioProjects/rental-mobile/lib/constants/mpesa_keys.dart';
 import 'package:rental_ui/widgets/ChatItemWidget.dart';
 import 'package:rental_ui/widgets/InputWidget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rental_ui/widgets/PaymentsTab.dart';
 import 'package:rental_ui/widgets/UserProfile.dart';
+
+const savedKey = "";
+const savedSecret = "";
 
 void main() {
   MpesaFlutterPlugin.setConsumerKey(savedKey);
@@ -229,7 +231,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Future<dynamic> makeSTKPush(String  tenantPhone, double amount,String monthOfTheYear) async{
+Future<dynamic> makeSTKPush(
+    String tenantPhone, double amount, String monthOfTheYear) async {
   dynamic transactionInitialisation;
   try {
     transactionInitialisation = await MpesaFlutterPlugin.initializeMpesaSTKPush(
