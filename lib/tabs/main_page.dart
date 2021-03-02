@@ -1,10 +1,8 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/models/tenant.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/my_drawer.dart';
 
 import 'home_page_tab/new_home_page.dart';
 import 'payment_history_tab/ledger.dart';
@@ -20,8 +18,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  NewHomePage _newHomePage;
-  Ledger _ledger;
 
   @override
   void initState() {
@@ -36,50 +32,44 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Tenant>(
-      create: (context) => widget.tenant,
-      child: Consumer<Tenant>(
-        builder: (context, tenant, aChild) {
-          return Scaffold(
-            backgroundColor: Palette.scaffoldBackground,
-            body: [
-              NewHomePage(widget.tenant),
-              Ledger(widget.tenant),
-            ].elementAt(_selectedIndex),
-            bottomNavigationBar: BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: "Home",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.history),
-                  label: 'Ledger',
-                ),
-              ],
-              elevation: 20,
-              currentIndex: _selectedIndex,
-              onTap: (value) => {_navigate(value)},
-            ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.lightGreen,
-              child: Center(
-                child: Text(
-                  'PAY',
-                ),
+    return Consumer<Tenant>(
+      builder: (context, tenant, aChild) {
+        return Scaffold(
+          backgroundColor: Palette.scaffoldBackground,
+          body: [
+            NewHomePage(widget.tenant),
+            Ledger(widget.tenant),
+          ].elementAt(_selectedIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "Home",
               ),
-              onPressed: () {
-//            Navigator.push(context, MaterialPageRoute(builder: (_) {
-//              return PayRentTab();
-//            }));
-                _addBottomSheet(context);
-              },
+              BottomNavigationBarItem(
+                icon: Icon(Icons.history),
+                label: 'Ledger',
+              ),
+            ],
+            elevation: 20,
+            currentIndex: _selectedIndex,
+            onTap: (value) => {_navigate(value)},
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.lightGreen,
+            child: Center(
+              child: Text(
+                'PAY',
+              ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-          );
-        },
-      ),
+            onPressed: () {
+              _addBottomSheet(context);
+            },
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+        );
+      },
     );
   }
 

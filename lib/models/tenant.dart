@@ -44,13 +44,6 @@ class Tenant extends ChangeNotifier{
     _occupation = occupation;
     _houseNumber = houseNumber;
   }
-  void updateTenant(Tenant tenant){
-    _firstName=tenant.firstName;
-    _lastName=tenant.lastName;
-    _phoneNumber=tenant.phoneNumber;
-    _idNumber=tenant.idNumber;
-    notifyListeners();
-  }
 
 
   String get firstName => _firstName;
@@ -77,4 +70,62 @@ class Tenant extends ChangeNotifier{
 
   List<Payment> get allPayments => _allPayments;
 
+  setLastName(String value) {
+    _lastName = value;
+    notifyListeners();
+  }
+
+  setPhoneNumber(String value) {
+    _phoneNumber = value;
+    notifyListeners();
+  }
+
+  setHouseNumber(String value) {
+    _houseNumber = value;
+    notifyListeners();
+  }
+
+  setEmailAddress(String value) {
+    _emailAddress = value;
+    notifyListeners();
+  }
+
+  setIDNumber(String value) {
+    _idNumber = value;
+    notifyListeners();
+  }
+
+  setPropertyName(String value) {
+    _propertyName = value;
+    notifyListeners();
+  }
+
+  setPropertyLocation(String value) {
+    _propertyLocation = value;
+    notifyListeners();
+  }
+
+  setOccupation(String value) {
+    _occupation = value;
+    notifyListeners();
+  }
+
+  setRentBalance(double value) {
+    _rentBalance = value;
+    notifyListeners();
+  }
+
+  setMonthlyRent(double value) {
+    _monthlyRent = value;
+    notifyListeners();
+  }
+
+  setAllPayments(List<Payment> value) {
+    _allPayments = value;
+    notifyListeners();
+  }
+  setFirstName(String value) {
+    _firstName = value;
+    notifyListeners();
+  }
 }

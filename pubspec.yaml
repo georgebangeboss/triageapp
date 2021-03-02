@@ -32,7 +32,6 @@ dependencies:
   http: ^0.12.2
   percent_indicator: "^2.1.7+2"
   intl: ^0.16.1
-  mpesa_flutter_plugin: ^1.0.0
   google_fonts: ^1.1.1
   moor_flutter: ^3.1.0
   url_launcher: ^5.7.10

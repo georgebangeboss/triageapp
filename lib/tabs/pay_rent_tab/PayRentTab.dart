@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
 
 class PayRentTab extends StatefulWidget {
   @override
@@ -69,33 +68,33 @@ class _PayRentTabState extends State<PayRentTab> {
 //    }
 //  }
 //}
-Future<dynamic> makeSTKPush(
-    String tenantPhone, double amount, String monthOfTheYear) async {
-  dynamic transactionInitialisation;
-  try {
-    transactionInitialisation = await MpesaFlutterPlugin.initializeMpesaSTKPush(
-        businessShortCode: '174379',
-        transactionType: TransactionType.CustomerPayBillOnline,
-        amount: amount,
-        partyA: tenantPhone,
-        partyB: '174379',
-        callBackURL: Uri(),
-        //TODO handle backend and database
-        accountReference: monthOfTheYear,
-        phoneNumber: tenantPhone,
-        baseUri: Uri(scheme: 'https', host: 'sandbox.safaricom.co.ke'),
-        transactionDesc: 'mock stk push',
-        passKey:
-        'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
-
-    //TODO transactionInitialisation is a HashMap. What to do with it?
-
-  } catch (e) {
-    //you can implement your exception handling here.
-    //Network unreachability is a sure exception.
-    print(e.getMessage());
-  }
-}
-void makeMpesaPayment() {
-  makeSTKPush('254701447794', 500.0, 'June Rent'); //dummy args passed
-}
+//Future<dynamic> makeSTKPush(
+//    String tenantPhone, double amount, String monthOfTheYear) async {
+//  dynamic transactionInitialisation;
+//  try {
+//    transactionInitialisation = await MpesaFlutterPlugin.initializeMpesaSTKPush(
+//        businessShortCode: '174379',
+//        transactionType: TransactionType.CustomerPayBillOnline,
+//        amount: amount,
+//        partyA: tenantPhone,
+//        partyB: '174379',
+//        callBackURL: Uri(),
+//        //TODO handle backend and database
+//        accountReference: monthOfTheYear,
+//        phoneNumber: tenantPhone,
+//        baseUri: Uri(scheme: 'https', host: 'sandbox.safaricom.co.ke'),
+//        transactionDesc: 'mock stk push',
+//        passKey:
+//        'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
+//
+//    //TODO transactionInitialisation is a HashMap. What to do with it?
+//
+//  } catch (e) {
+//    //you can implement your exception handling here.
+//    //Network unreachability is a sure exception.
+//    print(e.getMessage());
+//  }
+//}
+//void makeMpesaPayment() {
+//  makeSTKPush('254701447794', 500.0, 'June Rent'); //dummy args passed
+//}

@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/constants/text_styles.dart';
-import 'package:rental_ui/dummy_data/dummy_tenants.dart';
 import 'package:rental_ui/models/tenant.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/home_page_app_bar.dart';
 import 'package:rental_ui/tabs/home_page_tab/widgets/my_drawer.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/quick_help_bar.dart';
-import 'package:rental_ui/tabs/my_profile_tab/tenant_profile.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NewHomePage extends StatefulWidget {
   final Tenant tenant;
@@ -32,15 +27,14 @@ class _NewHomePageState extends State<NewHomePage> {
           IconButton(
             icon: Icon(Icons.call),
             onPressed: () {
-              Future<void> afterCall =
-                  _makePhoneCallToLandLord('tel:+254769123105');
+              //Future<void> afterCall =_makePhoneCallToLandLord('tel:+254769123105');
             },
             tooltip: 'Call the landlord',
           ),
           IconButton(
             icon: Icon(Icons.message_outlined),
             onPressed: () {
-              Future<void> afterText = _textTheLandLord('sms:+254769123105');
+              //_textTheLandLord('sms:+254769123105');
             },
             tooltip: 'Text the landlord',
           ),
@@ -199,18 +193,18 @@ class _NewHomePageState extends State<NewHomePage> {
   }
 }
 
-Future<void> _makePhoneCallToLandLord(String tel) async {
-  if (await canLaunch(tel)) {
-    await launch(tel);
-  } else {
-    throw 'Could not launch call to $tel';
-  }
-}
+//Future<void> _makePhoneCallToLandLord(String tel) async {
+//  if (await canLaunch(tel)) {
+//    await launch(tel);
+//  } else {
+//    throw 'Could not launch call to $tel';
+//  }
+//}
 
-Future<void> _textTheLandLord(String tel) async {
-  if (await canLaunch(tel)) {
-    await launch(tel);
-  } else {
-    throw 'Could not launch sms to $tel';
-  }
-}
+//Future<void> _textTheLandLord(String tel) async {
+//  if (await canLaunch(tel)) {
+//    await launch(tel);
+//  } else {
+//    throw 'Could not launch sms to $tel';
+//  }
+//}
