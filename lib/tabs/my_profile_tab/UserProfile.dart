@@ -46,7 +46,8 @@ class MapScreenState extends State<ProfilePage>
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Parsonal Information',
+
+                                        'Personal Information',
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold),
@@ -111,7 +112,7 @@ class MapScreenState extends State<ProfilePage>
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Email ID',
+                                        'ID number',
                                         style: TextStyle(
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.bold),
@@ -129,7 +130,46 @@ class MapScreenState extends State<ProfilePage>
                                   new Flexible(
                                     child: new TextField(
                                       decoration: const InputDecoration(
-                                          hintText: "Enter Email ID"),
+                                        hintText: "Enter Your ID number",
+                                      ),
+                                      enabled: !_status,
+                                      autofocus: !_status,
+
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 25.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  new Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      new Text(
+                                        'Email',
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 2.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  new Flexible(
+                                    child: new TextField(
+                                      keyboardType:TextInputType.emailAddress,
+                                      decoration: const InputDecoration(
+                                          hintText: "Enter Your Email"),
                                       enabled: !_status,
                                     ),
                                   ),
