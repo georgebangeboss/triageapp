@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/constants/text_styles.dart';
-import 'package:rental_ui/models/payment.dart';
+import 'package:rental_ui/models/payment.dart' as lib2;
+import 'package:rental_ui/moor/moor_db.dart';
 
 
 class DetailedSingleTransactionCardView extends StatelessWidget {
@@ -29,7 +30,7 @@ class DetailedSingleTransactionCardView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 2.0, 20.0, 2.0),
                     child: Text(
-                      '${currentPayment.dateOfTransaction}',
+                      '${currentPayment.dateAndTime}',
                       style: paymentCardStyle.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 2.0,
@@ -41,7 +42,7 @@ class DetailedSingleTransactionCardView extends StatelessWidget {
                     padding:
                         const EdgeInsets.only(left: 0.0, top: 2.0, bottom: 2.0),
                     child: Text(
-                      '${currentPayment.timeOfTransaction}',
+                      '${currentPayment.dateAndTime}',
                       style: paymentCardStyle.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 2.0,
@@ -63,7 +64,7 @@ class DetailedSingleTransactionCardView extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Kshs ${currentPayment.rentPaid.toStringAsFixed(2)}',
+                    'Kshs ${currentPayment.amountPaid.toStringAsFixed(2)}',
                     style: paymentCardStyle.copyWith(
                       fontWeight: FontWeight.w600,
                       letterSpacing: 2.0,
@@ -84,7 +85,7 @@ class DetailedSingleTransactionCardView extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Kshs ${currentPayment.rentDue.toStringAsFixed(2)}',
+                    'Kshs ${currentPayment.amountDue.toStringAsFixed(2)}',
                     style: paymentCardStyle.copyWith(
                       fontWeight: FontWeight.w600,
                       letterSpacing: 2.0,

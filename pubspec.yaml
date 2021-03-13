@@ -33,14 +33,17 @@ dependencies:
   percent_indicator: "^2.1.7+2"
   intl: ^0.16.1
   google_fonts: ^1.1.1
-  moor_flutter: ^3.1.0
   url_launcher: ^5.7.10
   connectivity: ^2.0.2
+  moor_flutter: ^3.1.0
   plugin_platform_interface: ^1.0.3
+  logger: ^0.9.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  moor_generator: ^3.4.0
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

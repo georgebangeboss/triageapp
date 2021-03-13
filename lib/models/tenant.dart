@@ -15,6 +15,7 @@ class Tenant extends ChangeNotifier{
   double _monthlyRent;
   List<Payment> _allPayments;
 
+
   Tenant({firstName,
     monthlyRent,
     occupation,

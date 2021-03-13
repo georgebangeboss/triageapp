@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
-import 'package:rental_ui/models/tenant.dart';
+import 'package:rental_ui/models/tenant.dart' as lib1;
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/error_pane.dart';
 import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
 class CreateEditProfile extends StatefulWidget {
-  final _tenant;
+  final lib1.Tenant _tenant;
 
   CreateEditProfile(this._tenant);
 
@@ -26,12 +27,26 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   String _tenantIDNumber = '';
   String _tenantEmail = '';
 
+  String _kin1FirstName='';
+  String _kin1LastName='';
+  String _kin1PhoneNumber='';
+  String _kin2FirstName='';
+  String _kin2LastName='';
+  String _kin2PhoneNumber='';
+
   TextEditingController firstNameController;
   TextEditingController lastNameController;
   TextEditingController occupationController;
   TextEditingController emailAddressController;
   TextEditingController phoneNumberController;
   TextEditingController idNumberController;
+  TextEditingController kin1FirstName;
+  TextEditingController kin1LastName;
+  TextEditingController kin1PhoneNumber;
+  TextEditingController kin2FirstName;
+  TextEditingController kin2LastName;
+  TextEditingController kin2PhoneNumber;
+
 
   FocusNode focusNodeEmail;
   FocusNode focusNodePhone;
@@ -39,6 +54,12 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   FocusNode focusNodeFirstName;
   FocusNode focusNodeLastName;
   FocusNode focusNodeOccupation;
+  FocusNode focusNodeKin1FirstName;
+  FocusNode focusNodeKin1LastName;
+  FocusNode focusNodeKin1PhoneNumber;
+  FocusNode focusNodeKin2FirstName;
+  FocusNode focusNodeKin2LastName;
+  FocusNode focusNodeKin2PhoneNumber;
 
   bool checkedTermsAndConditions = false;
   bool isEditPage = false;
@@ -56,9 +77,10 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   @override
   void initState() {
     super.initState();
+
     if (widget._tenant != null) {
       isEditPage = true;
-      var currentTenant = widget._tenant;
+      lib1.Tenant currentTenant = widget._tenant;
 
       focusNodeEmail = FocusNode();
       focusNodePhone = FocusNode();
@@ -66,6 +88,13 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
       focusNodeFirstName = FocusNode();
       focusNodeLastName = FocusNode();
       focusNodeOccupation = FocusNode();
+      focusNodeKin1FirstName= FocusNode();
+      focusNodeKin1LastName= FocusNode();
+      focusNodeKin1PhoneNumber= FocusNode();
+      focusNodeKin2FirstName= FocusNode();
+      focusNodeKin2LastName= FocusNode();
+      focusNodeKin2PhoneNumber= FocusNode();
+
 
       firstNameController = TextEditingController();
       lastNameController = TextEditingController();
@@ -73,6 +102,13 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
       emailAddressController = TextEditingController();
       phoneNumberController = TextEditingController();
       idNumberController = TextEditingController();
+      kin1FirstName= TextEditingController();
+      kin1LastName= TextEditingController();
+      kin1PhoneNumber= TextEditingController();
+      kin2FirstName= TextEditingController();
+      kin2LastName= TextEditingController();
+      kin2PhoneNumber= TextEditingController();
+
 
       firstNameController.text = currentTenant.firstName;
       lastNameController.text = currentTenant.lastName;
@@ -80,6 +116,12 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
       emailAddressController.text = currentTenant.emailAddress;
       phoneNumberController.text = currentTenant.phoneNumber;
       idNumberController.text = currentTenant.idNumber;
+//      kin1FirstName.text=currentTenant.kin1firstName;
+//      kin2FirstName.text=currentTenant.kin2firstName;
+//      kin1LastName.text=currentTenant.kin1LastName;
+//      kin2LastName.text=currentTenant.kin2LastName;
+//      kin1PhoneNumber.text=currentTenant.kin1PhoneNumber;
+//      kin2PhoneNumber.text=currentTenant.kin2PhoneNumber;
     }
   }
 
@@ -90,7 +132,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Tenant>(
+    return Consumer<lib1.Tenant>(
       builder: (context, tenant, aChild) {
         return Scaffold(
           appBar: AppBar(
@@ -344,7 +386,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return MainPage(widget._tenant);
+                                      return MainPage(tenant);
                                     },
                                   ),
                                 );
@@ -354,7 +396,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) {
-                                        return MainPage(widget._tenant);
+                                        return MainPage(tenant);
                                       },
                                     ),
                                   );

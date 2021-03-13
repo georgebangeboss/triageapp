@@ -26,3 +26,10 @@ var dummyPaymentsList= [
   Payment('2/1/2020','9:04 am', 2000.00, 1000.00),
   Payment('2/1/2020','9:04 am', 2000.00, 1000.00),
 ];
+var dummyPaymentsList2=[
+  Payment.db(2020/12/02, 0910, 5000, 0),
+  Payment.db(2021/1/02, 0910, 5000, 0),
+  Payment.db(2021/2/02, 0910, 5000, 0),
+  Payment.db(2020/3/02, 0910, 5000, 0),
+  Payment.db(2020/3/02, 1910, 5000, 0),
+];
