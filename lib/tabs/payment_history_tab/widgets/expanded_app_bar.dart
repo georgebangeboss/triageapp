@@ -1,23 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rental_ui/constants/text_styles.dart';
-import 'package:rental_ui/models/tenant.dart';
 
 class ExpandedAppBar extends StatefulWidget {
-  final Tenant _tenant;
 
   @override
   _ExpandedAppBarState createState() => _ExpandedAppBarState();
 
-  ExpandedAppBar(this._tenant);
+  ExpandedAppBar();
 }
 
 class _ExpandedAppBarState extends State<ExpandedAppBar> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<Tenant>(
-      builder: (context, tenant, aChild) {
         return Container(
           padding: EdgeInsets.only(top: 80, left: 5, right: 5),
           child: Center(
@@ -38,7 +32,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: Text(
-                    'Kshs ${tenant.rentBalance.toStringAsFixed(2)}',
+                    'Kshs TODO',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.green[200],
@@ -51,7 +45,5 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
             ),
           ),
         );
-      },
-    );
   }
 }

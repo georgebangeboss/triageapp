@@ -4,8 +4,7 @@ import 'package:rental_ui/models/tenant.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
 
 class TenantProfile extends StatefulWidget {
-  final Tenant tenant;
-  TenantProfile(this.tenant);
+  TenantProfile();
 
   @override
   _TenantProfileState createState() => _TenantProfileState();
@@ -14,6 +13,6 @@ class TenantProfile extends StatefulWidget {
 class _TenantProfileState extends State<TenantProfile> {
   @override
   Widget build(BuildContext context) {
-    return CreateEditProfile(widget.tenant);
+    return CreateEditProfile(TenantStatus.RESIDENT);
   }
 }

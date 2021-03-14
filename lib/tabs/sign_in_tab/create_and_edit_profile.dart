@@ -1,22 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:moor_flutter/moor_flutter.dart' as moor2;
 import 'package:provider/provider.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
-import 'package:rental_ui/models/tenant.dart' as lib1;
+import 'package:rental_ui/moor/moor_db.dart' as moor;
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/error_pane.dart';
 import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
 class CreateEditProfile extends StatefulWidget {
-  final lib1.Tenant _tenant;
+  final TenantStatus tenantStatus;
 
-  CreateEditProfile(this._tenant);
+  CreateEditProfile(this.tenantStatus);
 
   @override
   _CreateEditProfileState createState() => _CreateEditProfileState();
+}
+enum TenantStatus{
+  RESIDENT,
+  GUEST,
 }
 
 class _CreateEditProfileState extends State<CreateEditProfile> {
@@ -73,56 +77,48 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   bool showErrorPane = false;
 
   final _formKey = GlobalKey<FormState>();
+  var localDBTenant;
 
   @override
   void initState() {
     super.initState();
-
-    if (widget._tenant != null) {
-      isEditPage = true;
-      lib1.Tenant currentTenant = widget._tenant;
-
-      focusNodeEmail = FocusNode();
-      focusNodePhone = FocusNode();
-      focusNodeID = FocusNode();
-      focusNodeFirstName = FocusNode();
-      focusNodeLastName = FocusNode();
-      focusNodeOccupation = FocusNode();
-      focusNodeKin1FirstName= FocusNode();
-      focusNodeKin1LastName= FocusNode();
-      focusNodeKin1PhoneNumber= FocusNode();
-      focusNodeKin2FirstName= FocusNode();
-      focusNodeKin2LastName= FocusNode();
-      focusNodeKin2PhoneNumber= FocusNode();
+    localDBTenant= Provider.of<moor.TenantDao>(context).tenantsGenerated().getSingle();
+    focusNodeEmail = FocusNode();
+    focusNodePhone = FocusNode();
+    focusNodeID = FocusNode();
+    focusNodeFirstName = FocusNode();
+    focusNodeLastName = FocusNode();
+    focusNodeOccupation = FocusNode();
+    focusNodeKin1FirstName= FocusNode();
+    focusNodeKin1LastName= FocusNode();
+    focusNodeKin1PhoneNumber= FocusNode();
+    focusNodeKin2FirstName= FocusNode();
+    focusNodeKin2LastName= FocusNode();
+    focusNodeKin2PhoneNumber= FocusNode();
 
 
-      firstNameController = TextEditingController();
-      lastNameController = TextEditingController();
-      occupationController = TextEditingController();
-      emailAddressController = TextEditingController();
-      phoneNumberController = TextEditingController();
-      idNumberController = TextEditingController();
-      kin1FirstName= TextEditingController();
-      kin1LastName= TextEditingController();
-      kin1PhoneNumber= TextEditingController();
-      kin2FirstName= TextEditingController();
-      kin2LastName= TextEditingController();
-      kin2PhoneNumber= TextEditingController();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    occupationController = TextEditingController();
+    emailAddressController = TextEditingController();
+    phoneNumberController = TextEditingController();
+    idNumberController = TextEditingController();
+    kin1FirstName= TextEditingController();
+    kin1LastName= TextEditingController();
+    kin1PhoneNumber= TextEditingController();
+    kin2FirstName= TextEditingController();
+    kin2LastName= TextEditingController();
+    kin2PhoneNumber= TextEditingController();
 
 
-      firstNameController.text = currentTenant.firstName;
-      lastNameController.text = currentTenant.lastName;
-      occupationController.text = currentTenant.occupation;
-      emailAddressController.text = currentTenant.emailAddress;
-      phoneNumberController.text = currentTenant.phoneNumber;
-      idNumberController.text = currentTenant.idNumber;
+
 //      kin1FirstName.text=currentTenant.kin1firstName;
 //      kin2FirstName.text=currentTenant.kin2firstName;
 //      kin1LastName.text=currentTenant.kin1LastName;
 //      kin2LastName.text=currentTenant.kin2LastName;
 //      kin1PhoneNumber.text=currentTenant.kin1PhoneNumber;
 //      kin2PhoneNumber.text=currentTenant.kin2PhoneNumber;
-    }
+
   }
 
   @override
@@ -132,8 +128,26 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<lib1.Tenant>(
-      builder: (context, tenant, aChild) {
+    return FutureBuilder<moor.Tenant>(
+      future: localDBTenant,
+      builder: (context, AsyncSnapshot<moor.Tenant> asyncSnapshot) {
+        if(asyncSnapshot.hasData){
+          setState(() {
+            isEditPage=true;
+          });
+          moor.Tenant currentTenant=asyncSnapshot.data;
+
+          firstNameController.text = currentTenant.firstName;
+          lastNameController.text = currentTenant.lastName;
+          occupationController.text = currentTenant.occupation;
+          emailAddressController.text = currentTenant.emailAddress;
+          phoneNumberController.text = currentTenant.phoneNumber;
+          idNumberController.text = currentTenant.idNumber;
+        }else if(asyncSnapshot.hasError){
+            return null;
+        }else{
+            return null;
+        }
         return Scaffold(
           appBar: AppBar(
             leading: isEditPage
@@ -365,38 +379,49 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                           child: Text(
                             (isEditPage) ? 'SAVE CHANGES' : 'SIGN IN',
                           ),
-                          onPressed: () {
+                          onPressed: () async{
                             setState(() {
                               isSaveChangesSignInButtonPressed = true;
                             });
                             if (_formKey.currentState.validate()) {
                               _formKey.currentState.save();
-
-                              tenant
-                                ..setFirstName(_tenantFirstName.trim())
-                                ..setLastName(_tenantLastName.trim())
-                                ..setOccupation(_tenantOccupation.trim())
-                                ..setPhoneNumber(_tenantPhoneNumber.trim())
-                                ..setEmailAddress(_tenantEmail.trim())
-                                ..setIDNumber(_tenantIDNumber.trim());
-
-                              if (isEditPage) {
+                              var tenantDao=Provider.of<moor.TenantDao>(context);
+                              moor.Tenant dbTenant=asyncSnapshot.data;
+                              if (dbTenant!=null) {
+                                await tenantDao.updateTenant(dbTenant.copyWith(
+                                  firstName:_tenantFirstName.trim(),
+                                  lastName:_tenantLastName.trim(),
+                                  occupation:_tenantOccupation.trim(),
+                                  phoneNumber:_tenantPhoneNumber.trim(),
+                                  emailAddress:_tenantEmail.trim(),
+                                  idNumber:_tenantIDNumber.trim(),
+                                ));
                                 //TODO update remote database
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return MainPage(tenant);
+                                      return MainPage();
                                     },
                                   ),
                                 );
                               } else {
                                 if (checkedTermsAndConditions) {
                                   //TODO notify backend of new sign up
+                                   await tenantDao.insertTenant(
+                                    new moor.TenantsCompanion(
+                                      firstName:moor2.Value(_tenantFirstName.trim()),
+                                      lastName:moor2.Value(_tenantLastName.trim()),
+                                      occupation:moor2.Value(_tenantOccupation.trim()),
+                                      phoneNumber:moor2.Value(_tenantPhoneNumber.trim()),
+                                      emailAddress:moor2.Value(_tenantEmail.trim()),
+                                      idNumber:moor2.Value(_tenantIDNumber.trim()),
+                                    )
+                                  );
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) {
-                                        return MainPage(tenant);
+                                        return MainPage();
                                       },
                                     ),
                                   );

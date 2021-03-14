@@ -20,8 +20,6 @@ class Tenants extends Table {
 
   TextColumn get tenantId => text()();
 
-  TextColumn get tenantUnitId => text()();
-
   @override
   Set<Column> get primaryKey => {tenantId};
 }
@@ -95,12 +93,6 @@ class AppDatabase extends _$AppDatabase {
             amountDue: Value(0.00),
             transactionCode: Value('hjgkfj'),
             transactionProvider: Value('mpesa'),
-          ),
-        );
-        await into(tenants).insert(
-          TenantsCompanion(
-            firstName: Value('George'),
-            lastName: Value('Bange'),
           ),
         );
         },

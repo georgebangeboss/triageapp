@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -19,9 +18,6 @@ const savedSecret = "";
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider<lib1.Tenant>(
-        create: (_)=>dummyTenant,
-      ),
       Provider(
         create:(_)=>AppDatabase().paymentDao,
       ),
@@ -143,9 +139,9 @@ class _MyAppState extends State<MyApp> {
           if(asyncSnapshot.hasData){
             bool isFirstTime=asyncSnapshot.data;
             if(isFirstTime){
-              return CreateEditProfile(null);
+              return CreateEditProfile(TenantStatus.GUEST);
             }else{
-              return MainPage(dummyTenant);
+              return MainPage();
             }
           }
           else{

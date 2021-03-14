@@ -2,15 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
-import 'package:rental_ui/models/tenant.dart';
-
 import 'home_page_tab/new_home_page.dart';
 import 'payment_history_tab/ledger.dart';
 
 class MainPage extends StatefulWidget {
-  final Tenant tenant;
 
-  MainPage(this.tenant);
+  MainPage();
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -32,13 +29,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Tenant>(
-      builder: (context, tenant, aChild) {
-        return Scaffold(
+    return Scaffold(
           backgroundColor: Palette.scaffoldBackground,
           body: [
-            NewHomePage(widget.tenant),
-            Ledger(widget.tenant),
+            NewHomePage(),
+            Ledger(),
           ].elementAt(_selectedIndex),
           bottomNavigationBar: BottomNavigationBar(
             items: [
@@ -69,8 +64,6 @@ class _MainPageState extends State<MainPage> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
         );
-      },
-    );
   }
 
   void _addBottomSheet(BuildContext context) {

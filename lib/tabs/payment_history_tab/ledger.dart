@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rental_ui/models/payment.dart'as Lib3;
-import 'package:rental_ui/models/tenant.dart' as lib2;
 import 'package:rental_ui/moor/moor_db.dart';
 import 'package:rental_ui/tabs/payment_history_tab/widgets/detailed_single_transaction_card_view.dart';
 import 'package:rental_ui/tabs/payment_history_tab/widgets/expanded_app_bar.dart';
 import 'package:rental_ui/tabs/payment_history_tab/widgets/little_app_bar.dart';
 
 class Ledger extends StatefulWidget {
-  final lib2.Tenant _tenant;
 
   @override
   _LedgerState createState() => _LedgerState();
 
-  Ledger(this._tenant);
+  Ledger();
 }
 
 class _LedgerState extends State<Ledger> {
@@ -32,8 +29,6 @@ class _LedgerState extends State<Ledger> {
   }
   @override
   Widget build(BuildContext context) {
-    return Consumer<lib2.Tenant>(
-      builder: (context,tenant,aChild){
         return Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
@@ -43,7 +38,7 @@ class _LedgerState extends State<Ledger> {
                   floating: true,
                   expandedHeight: 150,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: ExpandedAppBar(widget._tenant),
+                    background: ExpandedAppBar(),
                   )),
               StreamBuilder(
                 stream: Provider.of<PaymentDao>(context).paymentsGenerated().watch(),
@@ -64,9 +59,6 @@ class _LedgerState extends State<Ledger> {
             ],
           ),
         );
-      },
-    );
-
   }
 }
 
