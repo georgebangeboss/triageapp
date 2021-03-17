@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
 import 'package:rental_ui/moor/moor_db.dart' as moor;
+import 'package:rental_ui/moor/moor_db.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/error_pane.dart';
 import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
@@ -18,7 +19,8 @@ class CreateEditProfile extends StatefulWidget {
   @override
   _CreateEditProfileState createState() => _CreateEditProfileState();
 }
-enum TenantStatus{
+
+enum TenantStatus {
   RESIDENT,
   GUEST,
 }
@@ -31,12 +33,12 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   String _tenantIDNumber = '';
   String _tenantEmail = '';
 
-  String _kin1FirstName='';
-  String _kin1LastName='';
-  String _kin1PhoneNumber='';
-  String _kin2FirstName='';
-  String _kin2LastName='';
-  String _kin2PhoneNumber='';
+  String _kin1FirstName = '';
+  String _kin1LastName = '';
+  String _kin1PhoneNumber = '';
+  String _kin2FirstName = '';
+  String _kin2LastName = '';
+  String _kin2PhoneNumber = '';
 
   TextEditingController firstNameController;
   TextEditingController lastNameController;
@@ -50,7 +52,6 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   TextEditingController kin2FirstName;
   TextEditingController kin2LastName;
   TextEditingController kin2PhoneNumber;
-
 
   FocusNode focusNodeEmail;
   FocusNode focusNodePhone;
@@ -77,25 +78,25 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   bool showErrorPane = false;
 
   final _formKey = GlobalKey<FormState>();
-  var localDBTenant;
+  Future<Tenant> localDBTenant;
 
   @override
   void initState() {
     super.initState();
-    localDBTenant= Provider.of<moor.TenantDao>(context).tenantsGenerated().getSingle();
+    // localDBTenant =
+    //     Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
     focusNodeEmail = FocusNode();
     focusNodePhone = FocusNode();
     focusNodeID = FocusNode();
     focusNodeFirstName = FocusNode();
     focusNodeLastName = FocusNode();
     focusNodeOccupation = FocusNode();
-    focusNodeKin1FirstName= FocusNode();
-    focusNodeKin1LastName= FocusNode();
-    focusNodeKin1PhoneNumber= FocusNode();
-    focusNodeKin2FirstName= FocusNode();
-    focusNodeKin2LastName= FocusNode();
-    focusNodeKin2PhoneNumber= FocusNode();
-
+    focusNodeKin1FirstName = FocusNode();
+    focusNodeKin1LastName = FocusNode();
+    focusNodeKin1PhoneNumber = FocusNode();
+    focusNodeKin2FirstName = FocusNode();
+    focusNodeKin2LastName = FocusNode();
+    focusNodeKin2PhoneNumber = FocusNode();
 
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
@@ -103,14 +104,12 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
     emailAddressController = TextEditingController();
     phoneNumberController = TextEditingController();
     idNumberController = TextEditingController();
-    kin1FirstName= TextEditingController();
-    kin1LastName= TextEditingController();
-    kin1PhoneNumber= TextEditingController();
-    kin2FirstName= TextEditingController();
-    kin2LastName= TextEditingController();
-    kin2PhoneNumber= TextEditingController();
-
-
+    kin1FirstName = TextEditingController();
+    kin1LastName = TextEditingController();
+    kin1PhoneNumber = TextEditingController();
+    kin2FirstName = TextEditingController();
+    kin2LastName = TextEditingController();
+    kin2PhoneNumber = TextEditingController();
 
 //      kin1FirstName.text=currentTenant.kin1firstName;
 //      kin2FirstName.text=currentTenant.kin2firstName;
@@ -118,7 +117,6 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 //      kin2LastName.text=currentTenant.kin2LastName;
 //      kin1PhoneNumber.text=currentTenant.kin1PhoneNumber;
 //      kin2PhoneNumber.text=currentTenant.kin2PhoneNumber;
-
   }
 
   @override
@@ -128,14 +126,17 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<moor.Tenant>(
+    localDBTenant =
+        Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
+    return FutureBuilder<Tenant>(
       future: localDBTenant,
-      builder: (context, AsyncSnapshot<moor.Tenant> asyncSnapshot) {
-        if(asyncSnapshot.hasData){
+      builder: (context, AsyncSnapshot<Tenant> asyncSnapshot) {
+        print("LocalDBTenant: ${asyncSnapshot.data}");
+        if (asyncSnapshot.hasData) {
           setState(() {
-            isEditPage=true;
+            isEditPage = true;
           });
-          moor.Tenant currentTenant=asyncSnapshot.data;
+          Tenant currentTenant = asyncSnapshot.data;
 
           firstNameController.text = currentTenant.firstName;
           lastNameController.text = currentTenant.lastName;
@@ -143,10 +144,10 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
           emailAddressController.text = currentTenant.emailAddress;
           phoneNumberController.text = currentTenant.phoneNumber;
           idNumberController.text = currentTenant.idNumber;
-        }else if(asyncSnapshot.hasError){
-            return null;
-        }else{
-            return null;
+        } else if (asyncSnapshot.hasError) {
+          return Center(
+            child: Text('An error has occured'),
+          );
         }
         return Scaffold(
           appBar: AppBar(
@@ -290,7 +291,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                 _tenantEmail = emailAddress;
                               },
                               decoration: signInInputDecor.copyWith(
-                                  labelText: 'Email Address (optional)'),
+                                  labelText: 'Email Address'),
                             ),
                             SizedBox(
                               height: 10,
@@ -379,22 +380,24 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                           child: Text(
                             (isEditPage) ? 'SAVE CHANGES' : 'SIGN IN',
                           ),
-                          onPressed: () async{
+                          onPressed: () async {
                             setState(() {
                               isSaveChangesSignInButtonPressed = true;
                             });
                             if (_formKey.currentState.validate()) {
                               _formKey.currentState.save();
-                              var tenantDao=Provider.of<moor.TenantDao>(context);
-                              moor.Tenant dbTenant=asyncSnapshot.data;
-                              if (dbTenant!=null) {
+                              var tenantDao = Provider.of<TenantDao>(context,
+                                  listen: false);
+                              Tenant dbTenant = asyncSnapshot.data;
+                              print("Pressed with dbTenant = ${dbTenant}");
+                              if (dbTenant != null) {
                                 await tenantDao.updateTenant(dbTenant.copyWith(
-                                  firstName:_tenantFirstName.trim(),
-                                  lastName:_tenantLastName.trim(),
-                                  occupation:_tenantOccupation.trim(),
-                                  phoneNumber:_tenantPhoneNumber.trim(),
-                                  emailAddress:_tenantEmail.trim(),
-                                  idNumber:_tenantIDNumber.trim(),
+                                  firstName: _tenantFirstName.trim(),
+                                  lastName: _tenantLastName.trim(),
+                                  occupation: _tenantOccupation.trim(),
+                                  phoneNumber: _tenantPhoneNumber.trim(),
+                                  emailAddress: _tenantEmail.trim(),
+                                  idNumber: _tenantIDNumber.trim(),
                                 ));
                                 //TODO update remote database
                                 Navigator.push(
@@ -408,16 +411,21 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               } else {
                                 if (checkedTermsAndConditions) {
                                   //TODO notify backend of new sign up
-                                   await tenantDao.insertTenant(
-                                    new moor.TenantsCompanion(
-                                      firstName:moor2.Value(_tenantFirstName.trim()),
-                                      lastName:moor2.Value(_tenantLastName.trim()),
-                                      occupation:moor2.Value(_tenantOccupation.trim()),
-                                      phoneNumber:moor2.Value(_tenantPhoneNumber.trim()),
-                                      emailAddress:moor2.Value(_tenantEmail.trim()),
-                                      idNumber:moor2.Value(_tenantIDNumber.trim()),
-                                    )
-                                  );
+                                  await tenantDao
+                                      .insertTenant(new TenantsCompanion(
+                                    firstName:
+                                        moor2.Value(_tenantFirstName.trim()),
+                                    lastName:
+                                        moor2.Value(_tenantLastName.trim()),
+                                    occupation:
+                                        moor2.Value(_tenantOccupation.trim()),
+                                    phoneNumber:
+                                        moor2.Value(_tenantPhoneNumber.trim()),
+                                    emailAddress:
+                                        moor2.Value(_tenantEmail.trim()),
+                                    idNumber:
+                                        moor2.Value(_tenantIDNumber.trim()),
+                                  ));
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) {

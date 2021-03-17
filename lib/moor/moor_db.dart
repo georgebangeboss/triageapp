@@ -18,10 +18,8 @@ class Tenants extends Table {
 
   TextColumn get occupation => text().nullable()();
 
-  TextColumn get tenantId => text()();
-
   @override
-  Set<Column> get primaryKey => {tenantId};
+  Set<Column> get primaryKey => {idNumber};
 }
 
 class Units extends Table {
@@ -75,26 +73,26 @@ class Notifications extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
       : super(FlutterQueryExecutor.inDatabaseFolder(
-            path: 'appdb', logStatements: true));
+            path: 'appdb2', logStatements: true));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   MigrationStrategy get migration => MigrationStrategy(
         beforeOpen: (OpeningDetails details) async {
           await customStatement('PRAGMA foreign_key = ON');
         },
         onCreate: (migrator) async {
-        await migrator.createAll();
-        await into(payments).insert(
-          PaymentsCompanion(
-            dateAndTime: Value('2019'),
-            amountPaid: Value(2500.00),
-            amountDue: Value(0.00),
-            transactionCode: Value('hjgkfj'),
-            transactionProvider: Value('mpesa'),
-          ),
-        );
+          await migrator.createAll();
+          await into(payments).insert(
+            PaymentsCompanion(
+              dateAndTime: Value('2019'),
+              amountPaid: Value(2500.00),
+              amountDue: Value(0.00),
+              transactionCode: Value('hjgkfj'),
+              transactionProvider: Value('mpesa'),
+            ),
+          );
         },
       );
 }

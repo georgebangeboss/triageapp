@@ -16,25 +16,25 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  var localDBTenant;
+  Future<Tenant> localDBTenant;
 
   @override
   void initState() {
-    localDBTenant =
-        Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    localDBTenant =
+        Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
     return ListView(
       children: [
         DrawerHeader(
           child: FutureBuilder<Tenant>(
               future: localDBTenant,
               builder: (context, AsyncSnapshot<Tenant> asyncSnapshot) {
-                if(asyncSnapshot.hasData){
-                  Tenant tenant=asyncSnapshot.data;
+                if (asyncSnapshot.hasData) {
+                  Tenant tenant = asyncSnapshot.data;
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -50,50 +50,56 @@ class _MyDrawerState extends State<MyDrawer> {
                         ),
                         onTap: () {
                           Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) {
                             return TenantProfile();
                           }));
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Text(
-                                '${tenant.firstName} ${tenant.lastName}',
-                                style: generalFont.copyWith(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Text(
+                                  '${tenant.firstName} ${tenant.lastName}',
+                                  style: generalFont.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Text(
-                                'propertyName',
-                                style: generalFont.copyWith(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Text(
+                                  'propertyName',
+                                  style: generalFont.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Text(
-                                'House  : houseNumber',
-                                style: generalFont.copyWith(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Text(
+                                  'House  : houseNumber',
+                                  style: generalFont.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       )
                     ],
                   );
-                }else if(asyncSnapshot.hasError){
+                } else if (asyncSnapshot.hasError) {
                   return null;
-                }else{
-                  return null;
+                } else {
+                  return CircularProgressIndicator();
                 }
               }),
         ),

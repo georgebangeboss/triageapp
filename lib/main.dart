@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -14,24 +13,23 @@ import 'moor/moor_db.dart';
 const savedKey = "";
 const savedSecret = "";
 
-
 void main() {
   runApp(MultiProvider(
     providers: [
       Provider(
-        create:(_)=>AppDatabase().paymentDao,
+        create: (_) => AppDatabase().paymentDao,
       ),
       Provider(
-        create:(_)=>AppDatabase().unitDao,
+        create: (_) => AppDatabase().unitDao,
       ),
       Provider(
-        create:(_)=>AppDatabase().tenantDao,
+        create: (_) => AppDatabase().tenantDao,
       ),
       Provider(
-        create:(_)=>AppDatabase().notificationDao,
+        create: (_) => AppDatabase().notificationDao,
       ),
       Provider(
-        create:(_)=>AppDatabase().kinDao,
+        create: (_) => AppDatabase().kinDao,
       ),
     ],
     child: MyApp(),
@@ -48,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       new GlobalKey<NavigatorState>();
   Future<bool> isFirstTime;
 
-  final Logger log =Logger(
+  final Logger log = Logger(
     printer: MyLogPrinter(),
   );
   //StreamSubscription _subscription;
@@ -60,7 +58,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    isFirstTime=_checkIfInitialTenantExist(Provider.of<TenantDao>(context, listen: false));
+    isFirstTime = _checkIfInitialTenantExist(
+        Provider.of<TenantDao>(context, listen: false));
 //    _connectivity = Connectivity();
 //    _subscription =
 //        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
@@ -112,8 +111,8 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Palette.buttonBackGround,
             onSurface: Color(0xffBD5940),
             elevation: 0.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
@@ -133,25 +132,27 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home:FutureBuilder<bool>(
-        future: isFirstTime,
-        builder: (context,AsyncSnapshot<bool> asyncSnapshot){
-          if(asyncSnapshot.hasData){
-            bool isFirstTime=asyncSnapshot.data;
-            if(isFirstTime){
+      home: FutureBuilder<bool>(
+        future: _checkIfInitialTenantExist(
+            Provider.of<TenantDao>(context, listen: false)),
+        builder: (context, AsyncSnapshot<bool> asyncSnapshot) {
+          print("AsynDataSnapshot: ${asyncSnapshot.data}");
+          if (asyncSnapshot.hasData) {
+            bool isFirstTime = asyncSnapshot.data;
+            if (isFirstTime) {
               return CreateEditProfile(TenantStatus.GUEST);
-            }else{
+            } else {
               return MainPage();
             }
-          }
-          else{
+          } else {
             //TODO add refresh widget
-            log.d ('refreshing............');
-            return null;
+            log.d('refreshing............');
+            return CreateEditProfile(TenantStatus.GUEST);
+            ;
           }
         },
       ),
-          //_checkAndDecide(isFirstTime, dummyTenant),
+      //_checkAndDecide(isFirstTime, dummyTenant),
     );
   }
 
@@ -165,17 +166,17 @@ class _MyAppState extends State<MyApp> {
       Scaffold.of(navigatorKey.currentContext).showSnackBar(shnack);
     }
   }
+
   Future<bool> _checkIfInitialTenantExist(TenantDao tenantDao) async {
-    var initialTenant=await tenantDao.tenantsGenerated().getSingle();
+    var initialTenant = await tenantDao.tenantsGenerated().getSingle();
     log.d('the local tenant is .............................');
 
-    if(initialTenant==null){
-      log.d ('NOBODY');
+    if (initialTenant == null) {
+      log.d('NOBODY');
       return true;
-    }else{
+    } else {
       log.d(initialTenant.firstName);
       return false;
     }
   }
-
 }

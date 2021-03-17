@@ -6,7 +6,6 @@ import 'package:rental_ui/moor/moor_db.dart';
 import 'package:rental_ui/tabs/home_page_tab/widgets/my_drawer.dart';
 
 class NewHomePage extends StatefulWidget {
-
   @override
   _NewHomePageState createState() => _NewHomePageState();
 
@@ -14,19 +13,21 @@ class NewHomePage extends StatefulWidget {
 }
 
 class _NewHomePageState extends State<NewHomePage> {
-  var localDBTenant;
+  Future<Tenant> localDBTenant;
   @override
   void initState() {
-    localDBTenant= Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
+    localDBTenant =
+        Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
     return FutureBuilder<Tenant>(
       future: localDBTenant,
-      builder: (context,AsyncSnapshot asyncSnapshot){
-        if(asyncSnapshot.hasData){
-          Tenant tenant=asyncSnapshot.data;
+      builder: (context, AsyncSnapshot asyncSnapshot) {
+        if (asyncSnapshot.hasData) {
+          Tenant tenant = asyncSnapshot.data;
           return Scaffold(
             drawer: Drawer(
               child: MyDrawer(),
@@ -56,69 +57,64 @@ class _NewHomePageState extends State<NewHomePage> {
                 slivers: [
                   SliverPadding(
                     padding: EdgeInsets.only(bottom: 20.0),
-                    sliver: Consumer<Tenant>(
-                      builder: (context, tenant, aChild) {
-                        return SliverToBoxAdapter(
-                          child: Container(
-                            height: 70,
-                            decoration: BoxDecoration(
-                              color: Palette.primaryBackground,
-                              borderRadius: BorderRadius.circular(2.0),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Text(
-                                        'Rent Due:',
-                                        style: generalFont.copyWith(
-                                          fontSize: 15,
-                                          color: Colors.brown[100],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Text(
-                                        'Kshs ',
-                                        style: generalFont.copyWith(
-                                          fontSize: 15,
-                                          color: Colors.brown[100],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                    sliver: SliverToBoxAdapter(
+                        child: Container(
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Palette.primaryBackground,
+                        borderRadius: BorderRadius.circular(2.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Text(
+                                  'Rent Due:',
+                                  style: generalFont.copyWith(
+                                    fontSize: 15,
+                                    color: Colors.brown[100],
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Icon(
-                                        Icons.calendar_today_outlined,
-                                        color: Colors.brown[100],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 5.0),
-                                      child: Text(
-                                        '5th',
-                                        style: generalFont.copyWith(
-                                          fontSize: 15,
-                                          color: Colors.brown[100],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Text(
+                                  'Kshs ',
+                                  style: generalFont.copyWith(
+                                    fontSize: 15,
+                                    color: Colors.brown[100],
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Icon(
+                                  Icons.calendar_today_outlined,
+                                  color: Colors.brown[100],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Text(
+                                  '5th',
+                                  style: generalFont.copyWith(
+                                    fontSize: 15,
+                                    color: Colors.brown[100],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )),
                   ),
                   SliverPadding(
                     padding: EdgeInsets.only(bottom: 10.0),
@@ -129,11 +125,11 @@ class _NewHomePageState extends State<NewHomePage> {
                             onPressed: () {},
                             child: Center(
                                 child: Text(
-                                  'View Arrears',
-                                  style: generalFont.copyWith(
-                                    fontSize: 15,
-                                  ),
-                                )),
+                              'View Arrears',
+                              style: generalFont.copyWith(
+                                fontSize: 15,
+                              ),
+                            )),
                           ),
                         ],
                       ),
@@ -148,11 +144,11 @@ class _NewHomePageState extends State<NewHomePage> {
                             onPressed: () {},
                             child: Center(
                                 child: Text(
-                                  'Make Complaint',
-                                  style: generalFont.copyWith(
-                                    fontSize: 15,
-                                  ),
-                                )),
+                              'Make Complaint',
+                              style: generalFont.copyWith(
+                                fontSize: 15,
+                              ),
+                            )),
                           ),
                         ],
                       ),
@@ -167,11 +163,11 @@ class _NewHomePageState extends State<NewHomePage> {
                             onPressed: () {},
                             child: Center(
                                 child: Text(
-                                  'Find New House',
-                                  style: generalFont.copyWith(
-                                    fontSize: 15,
-                                  ),
-                                )),
+                              'Find New House',
+                              style: generalFont.copyWith(
+                                fontSize: 15,
+                              ),
+                            )),
                           ),
                         ],
                       ),
@@ -186,11 +182,11 @@ class _NewHomePageState extends State<NewHomePage> {
                             onPressed: () {},
                             child: Center(
                                 child: Text(
-                                  'Goods and Services',
-                                  style: generalFont.copyWith(
-                                    fontSize: 15,
-                                  ),
-                                )),
+                              'Goods and Services',
+                              style: generalFont.copyWith(
+                                fontSize: 15,
+                              ),
+                            )),
                           ),
                         ],
                       ),
@@ -200,13 +196,12 @@ class _NewHomePageState extends State<NewHomePage> {
               ),
             ),
           );
-        }else if(asyncSnapshot.hasError){
+        } else if (asyncSnapshot.hasError) {
           return null;
-        }else{
-          return null;
+        } else {
+          return Center(child: CircularProgressIndicator());
         }
       },
-
     );
   }
 }

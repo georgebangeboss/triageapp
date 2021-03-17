@@ -14,15 +14,13 @@ class Tenant extends DataClass implements Insertable<Tenant> {
   final String emailAddress;
   final String phoneNumber;
   final String occupation;
-  final String tenantId;
   Tenant(
       {@required this.firstName,
       @required this.lastName,
       @required this.idNumber,
       this.emailAddress,
       @required this.phoneNumber,
-      this.occupation,
-      @required this.tenantId});
+      this.occupation});
   factory Tenant.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -40,8 +38,6 @@ class Tenant extends DataClass implements Insertable<Tenant> {
           .mapFromDatabaseResponse(data['${effectivePrefix}phone_number']),
       occupation: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}occupation']),
-      tenantId: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id']),
     );
   }
   @override
@@ -64,9 +60,6 @@ class Tenant extends DataClass implements Insertable<Tenant> {
     }
     if (!nullToAbsent || occupation != null) {
       map['occupation'] = Variable<String>(occupation);
-    }
-    if (!nullToAbsent || tenantId != null) {
-      map['tenant_id'] = Variable<String>(tenantId);
     }
     return map;
   }
@@ -91,9 +84,6 @@ class Tenant extends DataClass implements Insertable<Tenant> {
       occupation: occupation == null && nullToAbsent
           ? const Value.absent()
           : Value(occupation),
-      tenantId: tenantId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(tenantId),
     );
   }
 
@@ -107,7 +97,6 @@ class Tenant extends DataClass implements Insertable<Tenant> {
       emailAddress: serializer.fromJson<String>(json['emailAddress']),
       phoneNumber: serializer.fromJson<String>(json['phoneNumber']),
       occupation: serializer.fromJson<String>(json['occupation']),
-      tenantId: serializer.fromJson<String>(json['tenantId']),
     );
   }
   @override
@@ -120,7 +109,6 @@ class Tenant extends DataClass implements Insertable<Tenant> {
       'emailAddress': serializer.toJson<String>(emailAddress),
       'phoneNumber': serializer.toJson<String>(phoneNumber),
       'occupation': serializer.toJson<String>(occupation),
-      'tenantId': serializer.toJson<String>(tenantId),
     };
   }
 
@@ -130,8 +118,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
           String idNumber,
           String emailAddress,
           String phoneNumber,
-          String occupation,
-          String tenantId}) =>
+          String occupation}) =>
       Tenant(
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
@@ -139,7 +126,6 @@ class Tenant extends DataClass implements Insertable<Tenant> {
         emailAddress: emailAddress ?? this.emailAddress,
         phoneNumber: phoneNumber ?? this.phoneNumber,
         occupation: occupation ?? this.occupation,
-        tenantId: tenantId ?? this.tenantId,
       );
   @override
   String toString() {
@@ -149,8 +135,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
           ..write('idNumber: $idNumber, ')
           ..write('emailAddress: $emailAddress, ')
           ..write('phoneNumber: $phoneNumber, ')
-          ..write('occupation: $occupation, ')
-          ..write('tenantId: $tenantId')
+          ..write('occupation: $occupation')
           ..write(')'))
         .toString();
   }
@@ -162,10 +147,8 @@ class Tenant extends DataClass implements Insertable<Tenant> {
           lastName.hashCode,
           $mrjc(
               idNumber.hashCode,
-              $mrjc(
-                  emailAddress.hashCode,
-                  $mrjc(phoneNumber.hashCode,
-                      $mrjc(occupation.hashCode, tenantId.hashCode)))))));
+              $mrjc(emailAddress.hashCode,
+                  $mrjc(phoneNumber.hashCode, occupation.hashCode))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -175,8 +158,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
           other.idNumber == this.idNumber &&
           other.emailAddress == this.emailAddress &&
           other.phoneNumber == this.phoneNumber &&
-          other.occupation == this.occupation &&
-          other.tenantId == this.tenantId);
+          other.occupation == this.occupation);
 }
 
 class TenantsCompanion extends UpdateCompanion<Tenant> {
@@ -186,7 +168,6 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
   final Value<String> emailAddress;
   final Value<String> phoneNumber;
   final Value<String> occupation;
-  final Value<String> tenantId;
   const TenantsCompanion({
     this.firstName = const Value.absent(),
     this.lastName = const Value.absent(),
@@ -194,7 +175,6 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
     this.emailAddress = const Value.absent(),
     this.phoneNumber = const Value.absent(),
     this.occupation = const Value.absent(),
-    this.tenantId = const Value.absent(),
   });
   TenantsCompanion.insert({
     @required String firstName,
@@ -203,12 +183,10 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
     this.emailAddress = const Value.absent(),
     @required String phoneNumber,
     this.occupation = const Value.absent(),
-    @required String tenantId,
   })  : firstName = Value(firstName),
         lastName = Value(lastName),
         idNumber = Value(idNumber),
-        phoneNumber = Value(phoneNumber),
-        tenantId = Value(tenantId);
+        phoneNumber = Value(phoneNumber);
   static Insertable<Tenant> custom({
     Expression<String> firstName,
     Expression<String> lastName,
@@ -216,7 +194,6 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
     Expression<String> emailAddress,
     Expression<String> phoneNumber,
     Expression<String> occupation,
-    Expression<String> tenantId,
   }) {
     return RawValuesInsertable({
       if (firstName != null) 'first_name': firstName,
@@ -225,7 +202,6 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
       if (emailAddress != null) 'email_address': emailAddress,
       if (phoneNumber != null) 'phone_number': phoneNumber,
       if (occupation != null) 'occupation': occupation,
-      if (tenantId != null) 'tenant_id': tenantId,
     });
   }
 
@@ -235,8 +211,7 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
       Value<String> idNumber,
       Value<String> emailAddress,
       Value<String> phoneNumber,
-      Value<String> occupation,
-      Value<String> tenantId}) {
+      Value<String> occupation}) {
     return TenantsCompanion(
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
@@ -244,7 +219,6 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
       emailAddress: emailAddress ?? this.emailAddress,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       occupation: occupation ?? this.occupation,
-      tenantId: tenantId ?? this.tenantId,
     );
   }
 
@@ -269,9 +243,6 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
     if (occupation.present) {
       map['occupation'] = Variable<String>(occupation.value);
     }
-    if (tenantId.present) {
-      map['tenant_id'] = Variable<String>(tenantId.value);
-    }
     return map;
   }
 
@@ -283,8 +254,7 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
           ..write('idNumber: $idNumber, ')
           ..write('emailAddress: $emailAddress, ')
           ..write('phoneNumber: $phoneNumber, ')
-          ..write('occupation: $occupation, ')
-          ..write('tenantId: $tenantId')
+          ..write('occupation: $occupation')
           ..write(')'))
         .toString();
   }
@@ -370,28 +340,9 @@ class $TenantsTable extends Tenants with TableInfo<$TenantsTable, Tenant> {
     );
   }
 
-  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
-  GeneratedTextColumn _tenantId;
   @override
-  GeneratedTextColumn get tenantId => _tenantId ??= _constructTenantId();
-  GeneratedTextColumn _constructTenantId() {
-    return GeneratedTextColumn(
-      'tenant_id',
-      $tableName,
-      false,
-    );
-  }
-
-  @override
-  List<GeneratedColumn> get $columns => [
-        firstName,
-        lastName,
-        idNumber,
-        emailAddress,
-        phoneNumber,
-        occupation,
-        tenantId
-      ];
+  List<GeneratedColumn> get $columns =>
+      [firstName, lastName, idNumber, emailAddress, phoneNumber, occupation];
   @override
   $TenantsTable get asDslTable => this;
   @override
@@ -441,17 +392,11 @@ class $TenantsTable extends Tenants with TableInfo<$TenantsTable, Tenant> {
           occupation.isAcceptableOrUnknown(
               data['occupation'], _occupationMeta));
     }
-    if (data.containsKey('tenant_id')) {
-      context.handle(_tenantIdMeta,
-          tenantId.isAcceptableOrUnknown(data['tenant_id'], _tenantIdMeta));
-    } else if (isInserting) {
-      context.missing(_tenantIdMeta);
-    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {tenantId};
+  Set<GeneratedColumn> get $primaryKey => {idNumber};
   @override
   Tenant map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
