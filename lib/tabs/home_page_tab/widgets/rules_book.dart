@@ -15,20 +15,18 @@ class RulesBook extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Expanded(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Text(
-                    'Here are the house rules....',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.brown[600],
-                    ),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Text(
+                  'Here are the house rules....',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.brown[600],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }

@@ -5,17 +5,14 @@ import 'package:moor_flutter/moor_flutter.dart' as moor2;
 import 'package:provider/provider.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
-import 'package:rental_ui/moor/moor_db.dart' as moor;
 import 'package:rental_ui/moor/moor_db.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/error_pane.dart';
-import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
 class CreateEditProfile extends StatefulWidget {
   final TenantStatus tenantStatus;
 
-  CreateEditProfile(this.tenantStatus);
-
+  CreateEditProfile({this.tenantStatus});
   @override
   _CreateEditProfileState createState() => _CreateEditProfileState();
 }
@@ -83,8 +80,10 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   @override
   void initState() {
     super.initState();
-    // localDBTenant =
-    //     Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
+    if (widget.tenantStatus == TenantStatus.RESIDENT) {
+      isEditPage = true;
+    }
+
     focusNodeEmail = FocusNode();
     focusNodePhone = FocusNode();
     focusNodeID = FocusNode();
@@ -126,16 +125,19 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    localDBTenant =
-        Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
+    if (widget.tenantStatus == null) {
+      TenantStatus tenantStatus = ModalRoute.of(context).settings.arguments;
+      if (tenantStatus != null) {
+        if (tenantStatus == TenantStatus.RESIDENT) {
+          isEditPage = true;
+        }
+      }
+    }
     return FutureBuilder<Tenant>(
-      future: localDBTenant,
+      future: Provider.of<TenantDao>(context).tenantsGenerated().getSingle(),
       builder: (context, AsyncSnapshot<Tenant> asyncSnapshot) {
         print("LocalDBTenant: ${asyncSnapshot.data}");
         if (asyncSnapshot.hasData) {
-          setState(() {
-            isEditPage = true;
-          });
           Tenant currentTenant = asyncSnapshot.data;
 
           firstNameController.text = currentTenant.firstName;
@@ -338,15 +340,11 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                             text: 'terms & conditions',
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {
-                                                bool result =
-                                                    await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return TermsAndConditionsTab();
-                                                    },
-                                                  ),
-                                                );
+                                                bool result = await Navigator
+                                                        .of(context)
+                                                    .pushNamed(
+                                                        '/termsAndConditions');
+
                                                 setState(() {
                                                   checkedTermsAndConditions =
                                                       result;

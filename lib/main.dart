@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
-import 'package:rental_ui/dummy_data/dummy_tenants.dart';
 import 'package:rental_ui/logger/log_printer.dart';
-import 'package:rental_ui/models/tenant.dart' as lib1;
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
+import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
 import 'moor/moor_db.dart';
+import 'tabs/home_page_tab/widgets/my_rights.dart';
+import 'tabs/home_page_tab/widgets/rules_book.dart';
 
 const savedKey = "";
 const savedSecret = "";
@@ -36,55 +37,21 @@ void main() {
   ));
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final GlobalKey<NavigatorState> navigatorKey =
-      new GlobalKey<NavigatorState>();
-  Future<bool> isFirstTime;
-
+class MyApp extends StatelessWidget {
   final Logger log = Logger(
     printer: MyLogPrinter(),
   );
-  //StreamSubscription _subscription;
-  //Connectivity _connectivity;
-  //bool _connectionStatus = false;
-
-  //ConnectionStatusSingleton connectionStatus;
-
-  @override
-  void initState() {
-    super.initState();
-    isFirstTime = _checkIfInitialTenantExist(
-        Provider.of<TenantDao>(context, listen: false));
-//    _connectivity = Connectivity();
-//    _subscription =
-//        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-//      if (result == ConnectivityResult.wifi ||
-//          result == ConnectivityResult.mobile) {
-//        setState(() {
-//          _connectionStatus = true;
-//        });
-//        showConnectivitySnackBar(_connectionStatus);
-//      }
-//    });
-    //connectionStatus = ConnectionStatusSingleton.getInstance()..initialize();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    //_subscription.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/myRights': (context) => MyRights(),
+        '/rulesBook': (context) => RulesBook(),
+        '/editProfile': (context) => CreateEditProfile(),
+        '/termsAndConditions': (context) => TermsAndConditionsTab(),
+      },
       title: 'Sarrin Rental',
-      navigatorKey: navigatorKey,
       theme: ThemeData(
         fontFamily: 'PTSans',
         appBarTheme: AppBarTheme(
@@ -133,41 +100,27 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       home: FutureBuilder<bool>(
-        future: _checkIfInitialTenantExist(
+        future: checkIfInitialTenantExist(
             Provider.of<TenantDao>(context, listen: false)),
         builder: (context, AsyncSnapshot<bool> asyncSnapshot) {
-          print("AsynDataSnapshot: ${asyncSnapshot.data}");
+          log.d("AsynDataSnapshot: ${asyncSnapshot.data}");
           if (asyncSnapshot.hasData) {
-            bool isFirstTime = asyncSnapshot.data;
-            if (isFirstTime) {
-              return CreateEditProfile(TenantStatus.GUEST);
+            bool isNewTenant = asyncSnapshot.data;
+            if (isNewTenant) {
+              return CreateEditProfile(tenantStatus: TenantStatus.GUEST);
             } else {
               return MainPage();
             }
           } else {
-            //TODO add refresh widget
             log.d('refreshing............');
-            return CreateEditProfile(TenantStatus.GUEST);
-            ;
+            return CircularProgressIndicator();
           }
         },
       ),
-      //_checkAndDecide(isFirstTime, dummyTenant),
     );
   }
 
-  void showConnectivitySnackBar(dynamic hasConnection) {
-    print('Has connection: $hasConnection');
-    if (hasConnection == true) {
-      SnackBar shnack = SnackBar(
-        content: Text('Check your internet connection!'),
-        backgroundColor: Colors.brown[500],
-      );
-      Scaffold.of(navigatorKey.currentContext).showSnackBar(shnack);
-    }
-  }
-
-  Future<bool> _checkIfInitialTenantExist(TenantDao tenantDao) async {
+  Future<bool> checkIfInitialTenantExist(TenantDao tenantDao) async {
     var initialTenant = await tenantDao.tenantsGenerated().getSingle();
     log.d('the local tenant is .............................');
 
