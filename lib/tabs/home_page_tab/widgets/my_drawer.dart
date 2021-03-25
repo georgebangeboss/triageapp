@@ -4,13 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/constants/text_styles.dart';
 import 'package:rental_ui/moor/moor_db.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/my_rights.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/rules_book.dart';
 
 import '../../sign_in_tab/create_and_edit_profile.dart';
 
 class MyDrawer extends StatelessWidget {
-  Future<Tenant> localDBTenant;
+  static Future<Tenant> localDBTenant;
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +36,6 @@ class MyDrawer extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (_) {
-                          //   return CreateEditProfile(
-                          //       tenantStatus: TenantStatus.RESIDENT);
-                          // }));
                           Navigator.of(context).pushNamed('/editProfile',
                               arguments: TenantStatus.RESIDENT);
                         },

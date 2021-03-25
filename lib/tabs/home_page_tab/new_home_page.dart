@@ -160,10 +160,26 @@ class _NewHomePageState extends State<NewHomePage> {
                       child: Column(
                         children: [
                           OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              List<Payment> allPayments = <Payment>[];
+                              allPayments = await Provider.of<PaymentDao>(
+                                      context,
+                                      listen: false)
+                                  .paymentsGenerated()
+                                  .get();
+                              //TODO change the args passed below so that the tenant Status to be fetched from the web
+
+                              //Unit chosen = await
+                              Navigator.of(context)
+                                  .pushNamed('/houseListingPage'
+                                      //,arguments: allPayments.isEmpty
+                                      //? TenantStatus.GUEST
+                                      //: TenantStatus.RESIDENT
+                                      );
+                            },
                             child: Center(
                                 child: Text(
-                              'Find New House',
+                              'Book a House',
                               style: generalFont.copyWith(
                                 fontSize: 15,
                               ),

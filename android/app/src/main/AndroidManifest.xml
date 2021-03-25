@@ -12,8 +12,8 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="rental_ui"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Sarrin"
+        android:icon="@mipmap/launcher_sarrin_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

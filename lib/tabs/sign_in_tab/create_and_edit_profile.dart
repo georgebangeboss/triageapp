@@ -387,7 +387,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               var tenantDao = Provider.of<TenantDao>(context,
                                   listen: false);
                               Tenant dbTenant = asyncSnapshot.data;
-                              print("Pressed with dbTenant = ${dbTenant}");
+                              print("Pressed with dbTenant = $dbTenant");
                               if (dbTenant != null) {
                                 await tenantDao.updateTenant(dbTenant.copyWith(
                                   firstName: _tenantFirstName.trim(),

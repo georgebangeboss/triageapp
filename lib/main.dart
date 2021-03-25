@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/logger/log_printer.dart';
 import 'package:rental_ui/tabs/main_page.dart';
+import 'package:rental_ui/tabs/property_and_houses/houses_available.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
 import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
@@ -15,22 +16,23 @@ const savedKey = "";
 const savedSecret = "";
 
 void main() {
+  AppDatabase myDB = AppDatabase();
   runApp(MultiProvider(
     providers: [
       Provider(
-        create: (_) => AppDatabase().paymentDao,
+        create: (_) => myDB.paymentDao,
       ),
       Provider(
-        create: (_) => AppDatabase().unitDao,
+        create: (_) => myDB.unitDao,
       ),
       Provider(
-        create: (_) => AppDatabase().tenantDao,
+        create: (_) => myDB.tenantDao,
       ),
       Provider(
-        create: (_) => AppDatabase().notificationDao,
+        create: (_) => myDB.notificationDao,
       ),
       Provider(
-        create: (_) => AppDatabase().kinDao,
+        create: (_) => myDB.kinDao,
       ),
     ],
     child: MyApp(),
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         '/rulesBook': (context) => RulesBook(),
         '/editProfile': (context) => CreateEditProfile(),
         '/termsAndConditions': (context) => TermsAndConditionsTab(),
+        '/houseListingPage': (context) => HousesAvailable(),
       },
       title: 'Sarrin Rental',
       theme: ThemeData(
@@ -98,7 +101,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       home: FutureBuilder<bool>(
         future: checkIfInitialTenantExist(
             Provider.of<TenantDao>(context, listen: false)),
@@ -112,8 +115,12 @@ class MyApp extends StatelessWidget {
               return MainPage();
             }
           } else {
-            log.d('refreshing............');
-            return CircularProgressIndicator();
+            return MySplashScreen(
+              backgroundColor: Colors.white,
+              loaderColor: Colors.yellow,
+              image: Image.asset("assets/images/icon.jpg"),
+              photoSize: 100.0,
+            );
           }
         },
       ),
@@ -131,5 +138,66 @@ class MyApp extends StatelessWidget {
       log.d(initialTenant.firstName);
       return false;
     }
+  }
+}
+
+class MySplashScreen extends StatelessWidget {
+  final Color backgroundColor;
+  final double photoSize;
+  final Image image;
+  final Color loaderColor;
+
+  MySplashScreen({
+    this.backgroundColor,
+    this.image,
+    this.loaderColor,
+    this.photoSize,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Container(
+                        child: image,
+                      ),
+                      radius: photoSize,
+                    ),
+                  ],
+                )),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(loaderColor),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
