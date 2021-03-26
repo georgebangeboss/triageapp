@@ -188,7 +188,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'First Name',
                                 suffixIcon: (isFirstNameErrorIcon)
                                     ? Icon(Icons.error)
@@ -219,7 +219,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'Last Name',
                                 suffixIcon: (isLastNameErrorIcon)
                                     ? Icon(Icons.error)
@@ -244,7 +244,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'Phone Number',
                                 suffixIcon: (isPhoneNumberErrorIcon)
                                     ? Icon(Icons.error)
@@ -272,7 +272,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'ID Number',
                                 suffixIcon: (isIDNumberErrorIcon)
                                     ? Icon(Icons.error)
@@ -292,7 +292,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               onSaved: (emailAddress) {
                                 _tenantEmail = emailAddress;
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                   labelText: 'Email Address'),
                             ),
                             SizedBox(
@@ -305,7 +305,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               onSaved: (occupation) {
                                 _tenantOccupation = occupation;
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                   labelText: 'Occupation (optional)'),
                             ),
                             SizedBox(

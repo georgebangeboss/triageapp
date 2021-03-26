@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const signInInputDecor=InputDecoration(
+const inputDecor = InputDecoration(
   labelStyle: TextStyle(
     fontStyle: FontStyle.italic,
   ),
@@ -10,13 +10,13 @@ const signInInputDecor=InputDecoration(
     color: null,
     height: 0,
   ),
-  enabledBorder:OutlineInputBorder(
+  enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.yellow,
       width: 2.0,
     ),
   ),
-  focusedBorder:OutlineInputBorder(
+  focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.grey,
       width: 4.0,
