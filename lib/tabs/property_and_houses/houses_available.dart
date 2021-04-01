@@ -12,43 +12,49 @@ class _HousesAvailableState extends State<HousesAvailable> {
   //TenantStatus tenantStatus = ModalRoute.of(currentState.context).settings.arguments;
   @override
   Widget build(BuildContext context) {
-    Key centerKey = UniqueKey();
+    //Key centerKey = UniqueKey();
     return Scaffold(
+      backgroundColor: Colors.black,
       body: CustomScrollView(
         scrollDirection: Axis.vertical,
-        center: centerKey,
         slivers: [
-          MyCustomSearchBar(
-            key: centerKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 50.0,
-                child: TextField(
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.search),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      gapPadding: 0.0,
-                      borderSide: BorderSide(color: Colors.white),
+          SliverPersistentHeader(
+            pinned: false,
+            floating: true,
+            delegate: MySliverPersistentHeaderDelegate(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 30.0, 8.0, 8.0),
+                child: Card(
+                  child: Container(
+                    height: 50.0,
+                    child: TextField(
+                      enabled: false,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        suffixIcon: Icon(Icons.search),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          gapPadding: 0.0,
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(color: Colors.white),
+                          gapPadding: 0.0,
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(color: Colors.white),
+                          gapPadding: 0.0,
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(color: Colors.white),
+                          gapPadding: 0.0,
+                        ),
+                        hintText: "Search property name",
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(color: Colors.white),
-                      gapPadding: 0.0,
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(color: Colors.white),
-                      gapPadding: 0.0,
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(color: Colors.white),
-                      gapPadding: 0.0,
-                    ),
-                    hintText: "Search property name",
                   ),
                 ),
               ),
@@ -82,53 +88,29 @@ class _HousesAvailableState extends State<HousesAvailable> {
   }
 }
 
-//render object widget
-class MyCustomSearchBar extends SingleChildRenderObjectWidget {
-  MyCustomSearchBar({Widget child, Key key}) : super(child: child, key: key);
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return MySearchBarSliverRenderObject();
-  }
-}
+class MySliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
+  MySliverPersistentHeaderDelegate({this.child});
 
-//render object class
-class MySearchBarSliverRenderObject extends RenderSliverSingleBoxAdapter {
-  MySearchBarSliverRenderObject({RenderBox child}) : super(child: child);
-  @override
-  void performLayout() {
-    if (child == null) {
-      geometry = SliverGeometry.zero;
-      return;
-    }
-    final SliverConstraints constraints = this.constraints;
-    child.layout(constraints.asBoxConstraints(), parentUsesSize: true);
-    double childExtent;
-    switch (constraints.axis) {
-      case Axis.horizontal:
-        childExtent = child.size.width;
-        break;
-      case Axis.vertical:
-        childExtent = child.size.height;
-        break;
-    }
-    assert(childExtent != null);
-    final double paintedChildSize =
-        calculatePaintOffset(constraints, from: 0.0, to: childExtent);
-    final double cacheExtent =
-        calculateCacheOffset(constraints, from: 0.0, to: childExtent);
+  final Widget child;
 
-    assert(paintedChildSize.isFinite);
-    assert(paintedChildSize >= 0.0);
-    geometry = SliverGeometry(
-      scrollExtent: childExtent,
-      paintOrigin: constraints.scrollOffset + 40.0,
-      paintExtent: childExtent,
-      cacheExtent: cacheExtent,
-      maxPaintExtent: childExtent,
-      hitTestExtent: paintedChildSize,
-      hasVisualOverflow: childExtent > constraints.remainingPaintExtent ||
-          constraints.scrollOffset > 0.0,
-    );
-    setChildParentData(child, constraints, geometry);
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    if (child is Card && overlapsContent) {
+      //todo improve this part
+      //var card = child as Card;
+      // card.elevation = 3;
+      // card.shadowColor = Colors.black;
+    }
+    return child;
   }
+
+  @override
+  double get maxExtent => 100;
+
+  @override
+  double get minExtent => 100;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => false;
 }
