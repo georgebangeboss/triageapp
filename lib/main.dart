@@ -2,89 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
-import 'package:rental_ui/dummy_data/dummy_tenants.dart';
 import 'package:rental_ui/logger/log_printer.dart';
-import 'package:rental_ui/models/tenant.dart' as lib1;
 import 'package:rental_ui/tabs/main_page.dart';
+import 'package:rental_ui/tabs/property_and_houses/houses_available.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
+import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
+import 'constants/route_names.dart';
 import 'moor/moor_db.dart';
+import 'tabs/home_page_tab/widgets/my_rights.dart';
+import 'tabs/home_page_tab/widgets/rules_book.dart';
 
 const savedKey = "";
 const savedSecret = "";
 
 void main() {
+  AppDatabase myDB = AppDatabase();
   runApp(MultiProvider(
     providers: [
       Provider(
-        create: (_) => AppDatabase().paymentDao,
+        create: (_) => myDB.paymentDao,
       ),
       Provider(
-        create: (_) => AppDatabase().unitDao,
+        create: (_) => myDB.unitDao,
       ),
       Provider(
-        create: (_) => AppDatabase().tenantDao,
+        create: (_) => myDB.tenantDao,
       ),
       Provider(
-        create: (_) => AppDatabase().notificationDao,
+        create: (_) => myDB.notificationDao,
       ),
       Provider(
-        create: (_) => AppDatabase().kinDao,
+        create: (_) => myDB.kinDao,
       ),
     ],
     child: MyApp(),
   ));
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final GlobalKey<NavigatorState> navigatorKey =
-      new GlobalKey<NavigatorState>();
-  Future<bool> isFirstTime;
-
+class MyApp extends StatelessWidget {
   final Logger log = Logger(
     printer: MyLogPrinter(),
   );
-  //StreamSubscription _subscription;
-  //Connectivity _connectivity;
-  //bool _connectionStatus = false;
-
-  //ConnectionStatusSingleton connectionStatus;
-
-  @override
-  void initState() {
-    super.initState();
-    isFirstTime = _checkIfInitialTenantExist(
-        Provider.of<TenantDao>(context, listen: false));
-//    _connectivity = Connectivity();
-//    _subscription =
-//        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-//      if (result == ConnectivityResult.wifi ||
-//          result == ConnectivityResult.mobile) {
-//        setState(() {
-//          _connectionStatus = true;
-//        });
-//        showConnectivitySnackBar(_connectionStatus);
-//      }
-//    });
-    //connectionStatus = ConnectionStatusSingleton.getInstance()..initialize();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    //_subscription.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        myRights: (context) => MyRights(),
+        rulesBook: (context) => RulesBook(),
+        termsAndConditions: (context) => TermsAndConditionsTab(),
+        houseListingPage: (context) => HousesAvailable(),
+        createEditProfile: (context) => CreateEditProfile(),
+        mainPage: (context) => MainPage(),
+      },
       title: 'Sarrin Rental',
-      navigatorKey: navigatorKey,
       theme: ThemeData(
         fontFamily: 'PTSans',
         appBarTheme: AppBarTheme(
@@ -131,52 +103,113 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      debugShowCheckedModeBanner: false,
-      home: FutureBuilder<bool>(
-        future: _checkIfInitialTenantExist(
+      debugShowCheckedModeBanner: true,
+      home: MySplashScreen(
+        backgroundColor: Colors.white,
+        loaderColor: Colors.yellow,
+        image: Image.asset("assets/images/icon.jpg"),
+        photoSize: 100.0,
+        navigateAfterFuture: checkIfInitialTenantExist(
             Provider.of<TenantDao>(context, listen: false)),
-        builder: (context, AsyncSnapshot<bool> asyncSnapshot) {
-          print("AsynDataSnapshot: ${asyncSnapshot.data}");
-          if (asyncSnapshot.hasData) {
-            bool isFirstTime = asyncSnapshot.data;
-            if (isFirstTime) {
-              return CreateEditProfile(TenantStatus.GUEST);
-            } else {
-              return MainPage();
-            }
-          } else {
-            //TODO add refresh widget
-            log.d('refreshing............');
-            return CreateEditProfile(TenantStatus.GUEST);
-            ;
-          }
-        },
       ),
-      //_checkAndDecide(isFirstTime, dummyTenant),
     );
   }
 
-  void showConnectivitySnackBar(dynamic hasConnection) {
-    print('Has connection: $hasConnection');
-    if (hasConnection == true) {
-      SnackBar shnack = SnackBar(
-        content: Text('Check your internet connection!'),
-        backgroundColor: Colors.brown[500],
-      );
-      Scaffold.of(navigatorKey.currentContext).showSnackBar(shnack);
-    }
-  }
-
-  Future<bool> _checkIfInitialTenantExist(TenantDao tenantDao) async {
+  Future<dynamic> checkIfInitialTenantExist(TenantDao tenantDao) async {
     var initialTenant = await tenantDao.tenantsGenerated().getSingle();
     log.d('the local tenant is .............................');
 
     if (initialTenant == null) {
       log.d('NOBODY');
-      return true;
+      return '/createEditProfile';
     } else {
       log.d(initialTenant.firstName);
-      return false;
+      return '/mainPage';
     }
+  }
+}
+
+class MySplashScreen extends StatefulWidget {
+  final Color backgroundColor;
+  final double photoSize;
+  final Image image;
+  final Color loaderColor;
+  final Future<dynamic> navigateAfterFuture;
+
+  MySplashScreen({
+    this.backgroundColor,
+    this.image,
+    this.loaderColor,
+    this.photoSize,
+    this.navigateAfterFuture,
+  });
+
+  @override
+  _MySplashScreenState createState() => _MySplashScreenState();
+}
+
+class _MySplashScreenState extends State<MySplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.navigateAfterFuture.then((navigateTo) {
+      if (navigateTo is String) {
+        if (navigateTo == createEditProfile) {
+          Navigator.of(context)
+              .pushReplacementNamed(navigateTo, arguments: TenantStatus.GUEST);
+        } else if (navigateTo == mainPage) {
+          Navigator.of(context).pushReplacementNamed(navigateTo);
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: widget.backgroundColor,
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Container(
+                        child: widget.image,
+                      ),
+                      radius: widget.photoSize,
+                    ),
+                  ],
+                )),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(widget.loaderColor),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

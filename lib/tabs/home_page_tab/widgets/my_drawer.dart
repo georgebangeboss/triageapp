@@ -2,26 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
+import 'package:rental_ui/constants/route_names.dart';
 import 'package:rental_ui/constants/text_styles.dart';
 import 'package:rental_ui/moor/moor_db.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/my_rights.dart';
-import 'package:rental_ui/tabs/home_page_tab/widgets/rules_book.dart';
-import 'package:rental_ui/tabs/my_profile_tab/tenant_profile.dart';
 
-class MyDrawer extends StatefulWidget {
-  MyDrawer();
+import '../../sign_in_tab/create_and_edit_profile.dart';
 
-  @override
-  _MyDrawerState createState() => _MyDrawerState();
-}
-
-class _MyDrawerState extends State<MyDrawer> {
-  Future<Tenant> localDBTenant;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class MyDrawer extends StatelessWidget {
+  static Future<Tenant> localDBTenant;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +37,8 @@ class _MyDrawerState extends State<MyDrawer> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) {
-                            return TenantProfile();
-                          }));
+                          Navigator.of(context).pushNamed(createEditProfile,
+                              arguments: TenantStatus.RESIDENT);
                         },
                       ),
                       Expanded(
@@ -106,14 +91,7 @@ class _MyDrawerState extends State<MyDrawer> {
         InkWell(
           splashColor: Colors.greenAccent,
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return RulesBook();
-                },
-              ),
-            );
+            Navigator.of(context).pushNamed(rulesBook);
           },
           child: ListTile(
             leading: Icon(Icons.rule_outlined),
@@ -124,7 +102,7 @@ class _MyDrawerState extends State<MyDrawer> {
         InkWell(
           splashColor: Colors.greenAccent,
           onTap: () {
-            Navigator.pop(context);
+            //todo
           },
           child: ListTile(
             leading: Icon(Icons.notifications_outlined),
@@ -135,7 +113,7 @@ class _MyDrawerState extends State<MyDrawer> {
         InkWell(
           splashColor: Colors.greenAccent,
           onTap: () {
-            Navigator.pop(context);
+            //todo
           },
           child: ListTile(
             leading: Icon(Icons.bar_chart),
@@ -146,14 +124,7 @@ class _MyDrawerState extends State<MyDrawer> {
         InkWell(
           splashColor: Colors.greenAccent,
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return MyRights();
-                },
-              ),
-            );
+            Navigator.of(context).pushNamed(myRights);
           },
           child: ListTile(
             leading: Icon(Icons.menu_book_sharp),

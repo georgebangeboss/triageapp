@@ -1,7 +1,4 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:rental_ui/models/payment.dart' as lib2;
-import 'package:rental_ui/dummy_data/dummy_payments.dart';
-import 'dart:developer' as developer;
 
 part 'moor_db.g.dart';
 

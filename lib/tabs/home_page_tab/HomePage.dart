@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rental_ui/tabs/home_page_tab/widgets/DashboardCard.dart';
-import 'package:rental_ui/tabs/pay_rent_tab/PayRentTab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -45,7 +44,6 @@ class _HomePageState extends State<HomePage> {
         progressBarColor: Color(0xff4caf50),
         cardColor: Colors.orange,
       ),
-
       DashboardCard(
         title: 'Water',
         paidAmount: 15000,
@@ -62,6 +60,4 @@ class _HomePageState extends State<HomePage> {
       ),
     ]);
   }
-
-
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class NewHomePageAppBar extends StatelessWidget implements PreferredSizeWidget{
+class NewHomePageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
-  final Color gradientBegin,gradientEnd;
+  final Color gradientBegin, gradientEnd;
 
-  NewHomePageAppBar({this.height,this.gradientBegin,this.gradientEnd});
+  NewHomePageAppBar({this.height, this.gradientBegin, this.gradientEnd});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,5 +23,4 @@ class NewHomePageAppBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(height);
-
 }

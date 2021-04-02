@@ -1,6 +1,4 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
 
 class TermsAndConditionsTab extends StatelessWidget {
   @override

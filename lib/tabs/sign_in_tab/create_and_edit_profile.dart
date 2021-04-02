@@ -4,18 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:moor_flutter/moor_flutter.dart' as moor2;
 import 'package:provider/provider.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
+import 'package:rental_ui/constants/route_names.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
-import 'package:rental_ui/moor/moor_db.dart' as moor;
 import 'package:rental_ui/moor/moor_db.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/error_pane.dart';
-import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
 class CreateEditProfile extends StatefulWidget {
-  final TenantStatus tenantStatus;
-
-  CreateEditProfile(this.tenantStatus);
-
   @override
   _CreateEditProfileState createState() => _CreateEditProfileState();
 }
@@ -83,8 +78,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   @override
   void initState() {
     super.initState();
-    // localDBTenant =
-    //     Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
+
     focusNodeEmail = FocusNode();
     focusNodePhone = FocusNode();
     focusNodeID = FocusNode();
@@ -126,16 +120,16 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    localDBTenant =
-        Provider.of<TenantDao>(context).tenantsGenerated().getSingle();
+    TenantStatus tenantStatus = ModalRoute.of(context).settings.arguments;
+    if (tenantStatus == TenantStatus.RESIDENT) {
+      isEditPage = true;
+    }
+
     return FutureBuilder<Tenant>(
-      future: localDBTenant,
+      future: Provider.of<TenantDao>(context).tenantsGenerated().getSingle(),
       builder: (context, AsyncSnapshot<Tenant> asyncSnapshot) {
         print("LocalDBTenant: ${asyncSnapshot.data}");
         if (asyncSnapshot.hasData) {
-          setState(() {
-            isEditPage = true;
-          });
           Tenant currentTenant = asyncSnapshot.data;
 
           firstNameController.text = currentTenant.firstName;
@@ -186,7 +180,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'First Name',
                                 suffixIcon: (isFirstNameErrorIcon)
                                     ? Icon(Icons.error)
@@ -217,7 +211,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'Last Name',
                                 suffixIcon: (isLastNameErrorIcon)
                                     ? Icon(Icons.error)
@@ -242,7 +236,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'Phone Number',
                                 suffixIcon: (isPhoneNumberErrorIcon)
                                     ? Icon(Icons.error)
@@ -270,7 +264,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   return null;
                                 }
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                 labelText: 'ID Number',
                                 suffixIcon: (isIDNumberErrorIcon)
                                     ? Icon(Icons.error)
@@ -290,7 +284,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               onSaved: (emailAddress) {
                                 _tenantEmail = emailAddress;
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                   labelText: 'Email Address'),
                             ),
                             SizedBox(
@@ -303,7 +297,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               onSaved: (occupation) {
                                 _tenantOccupation = occupation;
                               },
-                              decoration: signInInputDecor.copyWith(
+                              decoration: inputDecor.copyWith(
                                   labelText: 'Occupation (optional)'),
                             ),
                             SizedBox(
@@ -338,15 +332,11 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                             text: 'terms & conditions',
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {
-                                                bool result =
-                                                    await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return TermsAndConditionsTab();
-                                                    },
-                                                  ),
-                                                );
+                                                bool result = await Navigator
+                                                        .of(context)
+                                                    .pushNamed(
+                                                        '/termsAndConditions');
+
                                                 setState(() {
                                                   checkedTermsAndConditions =
                                                       result;
@@ -389,7 +379,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                               var tenantDao = Provider.of<TenantDao>(context,
                                   listen: false);
                               Tenant dbTenant = asyncSnapshot.data;
-                              print("Pressed with dbTenant = ${dbTenant}");
+                              print("Pressed with dbTenant = $dbTenant");
                               if (dbTenant != null) {
                                 await tenantDao.updateTenant(dbTenant.copyWith(
                                   firstName: _tenantFirstName.trim(),
@@ -426,13 +416,8 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                     idNumber:
                                         moor2.Value(_tenantIDNumber.trim()),
                                   ));
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return MainPage();
-                                      },
-                                    ),
-                                  );
+                                  Navigator.of(context)
+                                      .pushReplacementNamed(mainPage);
                                 }
                               }
                             } else {

@@ -1,12 +1,9 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'home_page_tab/new_home_page.dart';
 import 'payment_history_tab/ledger.dart';
 
 class MainPage extends StatefulWidget {
-
   MainPage();
 
   @override
@@ -30,40 +27,39 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: Palette.scaffoldBackground,
-          body: [
-            NewHomePage(),
-            Ledger(),
-          ].elementAt(_selectedIndex),
-          bottomNavigationBar: BottomNavigationBar(
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history),
-                label: 'Ledger',
-              ),
-            ],
-            elevation: 20,
-            currentIndex: _selectedIndex,
-            onTap: (value) => {_navigate(value)},
+      backgroundColor: Palette.scaffoldBackground,
+      body: [
+        NewHomePage(),
+        Ledger(),
+      ].elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.lightGreen,
-            child: Center(
-              child: Text(
-                'PAY',
-              ),
-            ),
-            onPressed: () {
-              _addBottomSheet(context);
-            },
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'Ledger',
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-        );
+        ],
+        elevation: 20,
+        currentIndex: _selectedIndex,
+        onTap: (value) => {_navigate(value)},
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightGreen,
+        child: Center(
+          child: Text(
+            'PAY',
+          ),
+        ),
+        onPressed: () {
+          _addBottomSheet(context);
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
   }
 
   void _addBottomSheet(BuildContext context) {

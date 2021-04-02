@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/constants/text_styles.dart';
-import 'package:rental_ui/models/payment.dart' as lib2;
 import 'package:rental_ui/moor/moor_db.dart';
-
 
 class DetailedSingleTransactionCardView extends StatelessWidget {
   final Payment currentPayment;
