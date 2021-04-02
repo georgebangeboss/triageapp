@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
+import 'package:rental_ui/constants/route_names.dart';
 import 'package:rental_ui/constants/text_styles.dart';
 import 'package:rental_ui/moor/moor_db.dart';
 
@@ -36,7 +37,7 @@ class MyDrawer extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          Navigator.of(context).pushNamed('/editProfile',
+                          Navigator.of(context).pushNamed(createEditProfile,
                               arguments: TenantStatus.RESIDENT);
                         },
                       ),
@@ -90,7 +91,7 @@ class MyDrawer extends StatelessWidget {
         InkWell(
           splashColor: Colors.greenAccent,
           onTap: () {
-            Navigator.of(context).pushNamed('/rulesBook');
+            Navigator.of(context).pushNamed(rulesBook);
           },
           child: ListTile(
             leading: Icon(Icons.rule_outlined),
@@ -123,7 +124,7 @@ class MyDrawer extends StatelessWidget {
         InkWell(
           splashColor: Colors.greenAccent,
           onTap: () {
-            Navigator.of(context).pushNamed('/myRights');
+            Navigator.of(context).pushNamed(myRights);
           },
           child: ListTile(
             leading: Icon(Icons.menu_book_sharp),

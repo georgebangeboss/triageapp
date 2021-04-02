@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:moor_flutter/moor_flutter.dart' as moor2;
 import 'package:provider/provider.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
+import 'package:rental_ui/constants/route_names.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
 import 'package:rental_ui/moor/moor_db.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/sign_in_tab/error_pane.dart';
 
 class CreateEditProfile extends StatefulWidget {
-  final TenantStatus tenantStatus;
-
-  CreateEditProfile({this.tenantStatus});
   @override
   _CreateEditProfileState createState() => _CreateEditProfileState();
 }
@@ -80,9 +78,6 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
   @override
   void initState() {
     super.initState();
-    if (widget.tenantStatus == TenantStatus.RESIDENT) {
-      isEditPage = true;
-    }
 
     focusNodeEmail = FocusNode();
     focusNodePhone = FocusNode();
@@ -125,14 +120,11 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.tenantStatus == null) {
-      TenantStatus tenantStatus = ModalRoute.of(context).settings.arguments;
-      if (tenantStatus != null) {
-        if (tenantStatus == TenantStatus.RESIDENT) {
-          isEditPage = true;
-        }
-      }
+    TenantStatus tenantStatus = ModalRoute.of(context).settings.arguments;
+    if (tenantStatus == TenantStatus.RESIDENT) {
+      isEditPage = true;
     }
+
     return FutureBuilder<Tenant>(
       future: Provider.of<TenantDao>(context).tenantsGenerated().getSingle(),
       builder: (context, AsyncSnapshot<Tenant> asyncSnapshot) {
@@ -424,13 +416,8 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                     idNumber:
                                         moor2.Value(_tenantIDNumber.trim()),
                                   ));
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return MainPage();
-                                      },
-                                    ),
-                                  );
+                                  Navigator.of(context)
+                                      .pushReplacementNamed(mainPage);
                                 }
                               }
                             } else {

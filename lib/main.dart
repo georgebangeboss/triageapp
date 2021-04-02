@@ -8,6 +8,7 @@ import 'package:rental_ui/tabs/property_and_houses/houses_available.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
 import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
+import 'constants/route_names.dart';
 import 'moor/moor_db.dart';
 import 'tabs/home_page_tab/widgets/my_rights.dart';
 import 'tabs/home_page_tab/widgets/rules_book.dart';
@@ -48,11 +49,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/myRights': (context) => MyRights(),
-        '/rulesBook': (context) => RulesBook(),
-        '/editProfile': (context) => CreateEditProfile(),
-        '/termsAndConditions': (context) => TermsAndConditionsTab(),
-        '/houseListingPage': (context) => HousesAvailable(),
+        myRights: (context) => MyRights(),
+        rulesBook: (context) => RulesBook(),
+        termsAndConditions: (context) => TermsAndConditionsTab(),
+        houseListingPage: (context) => HousesAvailable(),
+        createEditProfile: (context) => CreateEditProfile(),
+        mainPage: (context) => MainPage(),
       },
       title: 'Sarrin Rental',
       theme: ThemeData(
@@ -102,57 +104,66 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: true,
-      home: FutureBuilder<bool>(
-        future: checkIfInitialTenantExist(
+      home: MySplashScreen(
+        backgroundColor: Colors.white,
+        loaderColor: Colors.yellow,
+        image: Image.asset("assets/images/icon.jpg"),
+        photoSize: 100.0,
+        navigateAfterFuture: checkIfInitialTenantExist(
             Provider.of<TenantDao>(context, listen: false)),
-        builder: (context, AsyncSnapshot<bool> asyncSnapshot) {
-          log.d("AsynDataSnapshot: ${asyncSnapshot.data}");
-          if (asyncSnapshot.hasData) {
-            bool isNewTenant = asyncSnapshot.data;
-            if (isNewTenant) {
-              return CreateEditProfile(tenantStatus: TenantStatus.GUEST);
-            } else {
-              return MainPage();
-            }
-          } else {
-            return MySplashScreen(
-              backgroundColor: Colors.white,
-              loaderColor: Colors.yellow,
-              image: Image.asset("assets/images/icon.jpg"),
-              photoSize: 100.0,
-            );
-          }
-        },
       ),
     );
   }
 
-  Future<bool> checkIfInitialTenantExist(TenantDao tenantDao) async {
+  Future<dynamic> checkIfInitialTenantExist(TenantDao tenantDao) async {
     var initialTenant = await tenantDao.tenantsGenerated().getSingle();
     log.d('the local tenant is .............................');
 
     if (initialTenant == null) {
       log.d('NOBODY');
-      return true;
+      return '/createEditProfile';
     } else {
       log.d(initialTenant.firstName);
-      return false;
+      return '/mainPage';
     }
   }
 }
 
-class MySplashScreen extends StatelessWidget {
+class MySplashScreen extends StatefulWidget {
   final Color backgroundColor;
   final double photoSize;
   final Image image;
   final Color loaderColor;
+  final Future<dynamic> navigateAfterFuture;
 
   MySplashScreen({
     this.backgroundColor,
     this.image,
     this.loaderColor,
     this.photoSize,
+    this.navigateAfterFuture,
   });
+
+  @override
+  _MySplashScreenState createState() => _MySplashScreenState();
+}
+
+class _MySplashScreenState extends State<MySplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.navigateAfterFuture.then((navigateTo) {
+      if (navigateTo is String) {
+        if (navigateTo == createEditProfile) {
+          Navigator.of(context)
+              .pushReplacementNamed(navigateTo, arguments: TenantStatus.GUEST);
+        } else if (navigateTo == mainPage) {
+          Navigator.of(context).pushReplacementNamed(navigateTo);
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -161,7 +172,7 @@ class MySplashScreen extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: widget.backgroundColor,
             ),
           ),
           Column(
@@ -176,9 +187,9 @@ class MySplashScreen extends StatelessWidget {
                     CircleAvatar(
                       backgroundColor: Colors.transparent,
                       child: Container(
-                        child: image,
+                        child: widget.image,
                       ),
-                      radius: photoSize,
+                      radius: widget.photoSize,
                     ),
                   ],
                 )),
@@ -189,7 +200,8 @@ class MySplashScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(loaderColor),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(widget.loaderColor),
                     ),
                   ],
                 ),
