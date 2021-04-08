@@ -6,7 +6,6 @@ part of 'chopper_api_services.dart';
 // ChopperGenerator
 // **************************************************************************
 
-// ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
 class _$UnitApiService extends UnitApiService {
   _$UnitApiService([ChopperClient client]) {
     if (client == null) return;
@@ -25,7 +24,6 @@ class _$UnitApiService extends UnitApiService {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
 class _$TenantApiService extends TenantApiService {
   _$TenantApiService([ChopperClient client]) {
     if (client == null) return;
@@ -55,7 +53,6 @@ class _$TenantApiService extends TenantApiService {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
 class _$PaymentApiService extends PaymentApiService {
   _$PaymentApiService([ChopperClient client]) {
     if (client == null) return;

@@ -42,9 +42,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  moor_generator: ^3.4.0
-  chopper_generator: ^3.0.6
-  #built_value_generator: ^8.0.4
+  #moor_generator: ^3.4.0
+  #chopper_generator: ^3.0.6
+  built_value_generator: ^8.0.4
   build_runner:
   flutter_launcher_icons: ^0.8.0
 flutter_icons:
