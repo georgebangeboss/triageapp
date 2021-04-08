@@ -1,8 +1,10 @@
+import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/logger/log_printer.dart';
+import 'package:rental_ui/network/chopper_api_services.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/property_and_houses/houses_available.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
@@ -18,8 +20,21 @@ const savedSecret = "";
 
 void main() {
   AppDatabase myDB = AppDatabase();
+  ChopperClient client = ChopperClient(
+    baseUrl: "https://api.sarrin.tech",
+    //TODO add interceptors and converters
+  );
   runApp(MultiProvider(
     providers: [
+      Provider(
+        create: (_) => TenantApiService.create(client),
+      ),
+      Provider(
+        create: (_) => UnitApiService.create(client),
+      ),
+      Provider(
+        create: (_) => PaymentApiService.create(client),
+      ),
       Provider(
         create: (_) => myDB.paymentDao,
       ),
