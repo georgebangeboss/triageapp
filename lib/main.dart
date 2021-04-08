@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/logger/log_printer.dart';
 import 'package:rental_ui/network/chopper_api_services.dart';
+import 'package:rental_ui/network/built_value_converter.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/property_and_houses/houses_available.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
@@ -22,7 +23,10 @@ void main() {
   AppDatabase myDB = AppDatabase();
   ChopperClient client = ChopperClient(
     baseUrl: "https://api.sarrin.tech",
-    //TODO add interceptors and converters
+    interceptors: [
+      HttpLoggingInterceptor(),
+    ],
+    converter: BuiltValueConverter(),
   );
   runApp(MultiProvider(
     providers: [
