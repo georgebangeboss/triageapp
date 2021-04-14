@@ -1,6 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:chopper/chopper.dart';
-import 'package:rental_ui/network/serializers.dart';
+import 'package:rental_ui/api/serializers.dart';
 
 class BuiltValueConverter extends JsonConverter {
   T _deserialize<T>(dynamic value) => serializers.deserializeWith<T>(

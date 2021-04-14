@@ -1,8 +1,10 @@
+import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:moor_flutter/moor_flutter.dart' as moor2;
 import 'package:provider/provider.dart';
+import 'package:rental_ui/api/chopper_api_services.dart';
+import 'package:rental_ui/api/data_classes.dart';
 import 'package:rental_ui/constants/input_decorations.dart';
 import 'package:rental_ui/constants/route_names.dart';
 import 'package:rental_ui/constants/terms_and_conditions_global_keys.dart';
@@ -137,7 +139,7 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
           occupationController.text = currentTenant.occupation;
           emailAddressController.text = currentTenant.emailAddress;
           phoneNumberController.text = currentTenant.phoneNumber;
-          idNumberController.text = currentTenant.idNumber;
+          idNumberController.text = currentTenant.idNumber.toString();
         } else if (asyncSnapshot.hasError) {
           return Center(
             child: Text('An error has occured'),
@@ -380,16 +382,30 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                   listen: false);
                               Tenant dbTenant = asyncSnapshot.data;
                               print("Pressed with dbTenant = $dbTenant");
+
                               if (dbTenant != null) {
-                                await tenantDao.updateTenant(dbTenant.copyWith(
+                                dbTenant = dbTenant.copyWith(
                                   firstName: _tenantFirstName.trim(),
                                   lastName: _tenantLastName.trim(),
                                   occupation: _tenantOccupation.trim(),
                                   phoneNumber: _tenantPhoneNumber.trim(),
                                   emailAddress: _tenantEmail.trim(),
-                                  idNumber: _tenantIDNumber.trim(),
-                                ));
-                                //TODO update remote database
+                                  idNumber: int.parse(_tenantIDNumber.trim()),
+                                );
+                                await tenantDao.updateTenant(dbTenant);
+                                BuiltTenant existingApiTenant =
+                                    BuiltTenant((builder) => builder
+                                      ..firstName = dbTenant.firstName
+                                      ..lastName = dbTenant.lastName
+                                      ..telephoneNumber = dbTenant.phoneNumber
+                                      ..idNumber = dbTenant.idNumber
+                                      ..occupation = dbTenant.occupation
+                                      ..emailAdress = dbTenant.emailAddress);
+                                await TenantApiService.create(
+                                        "?idNumber=eq.$dbTenant.idNumber",
+                                        Provider.of<ChopperClient>(context,
+                                            listen: false))
+                                    .updateTenant(existingApiTenant);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -400,22 +416,31 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                 );
                               } else {
                                 if (checkedTermsAndConditions) {
-                                  //TODO notify backend of new sign up
-                                  await tenantDao
-                                      .insertTenant(new TenantsCompanion(
-                                    firstName:
-                                        moor2.Value(_tenantFirstName.trim()),
-                                    lastName:
-                                        moor2.Value(_tenantLastName.trim()),
-                                    occupation:
-                                        moor2.Value(_tenantOccupation.trim()),
-                                    phoneNumber:
-                                        moor2.Value(_tenantPhoneNumber.trim()),
-                                    emailAddress:
-                                        moor2.Value(_tenantEmail.trim()),
-                                    idNumber:
-                                        moor2.Value(_tenantIDNumber.trim()),
-                                  ));
+                                  Tenant newTenant = Tenant(
+                                    firstName: _tenantFirstName.trim(),
+                                    lastName: _tenantLastName.trim(),
+                                    occupation: _tenantOccupation.trim(),
+                                    phoneNumber: _tenantPhoneNumber.trim(),
+                                    emailAddress: _tenantEmail.trim(),
+                                    idNumber: int.parse(_tenantIDNumber.trim()),
+                                  );
+
+                                  await tenantDao.insertTenant(
+                                      newTenant.toCompanion(true));
+                                  BuiltTenant newApiTenant = BuiltTenant(
+                                      (builder) => builder
+                                        ..firstName = newTenant.firstName
+                                        ..lastName = newTenant.lastName
+                                        ..telephoneNumber =
+                                            newTenant.phoneNumber
+                                        ..idNumber = newTenant.idNumber
+                                        ..occupation = newTenant.occupation
+                                        ..emailAdress = newTenant.emailAddress);
+                                  await TenantApiService.create(
+                                          "?idNumber=eq.$newTenant.idNumber",
+                                          Provider.of<ChopperClient>(context,
+                                              listen: false))
+                                      .createNewTenant(newApiTenant);
                                   Navigator.of(context)
                                       .pushReplacementNamed(mainPage);
                                 }

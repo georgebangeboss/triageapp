@@ -2,15 +2,17 @@ import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:rental_ui/api/data_classes.dart';
+import 'package:rental_ui/api/my_chopper_client.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/logger/log_printer.dart';
-import 'package:rental_ui/network/chopper_api_services.dart';
-import 'package:rental_ui/network/built_value_converter.dart';
 import 'package:rental_ui/tabs/main_page.dart';
 import 'package:rental_ui/tabs/property_and_houses/houses_available.dart';
 import 'package:rental_ui/tabs/sign_in_tab/create_and_edit_profile.dart';
 import 'package:rental_ui/tabs/sign_in_tab/terms_and_conditions_tab.dart';
 
+import 'api/chopper_api_services.dart';
+import 'api/tenant_change_notifier.dart';
 import 'constants/route_names.dart';
 import 'moor/moor_db.dart';
 import 'tabs/home_page_tab/widgets/my_rights.dart';
@@ -21,23 +23,11 @@ const savedSecret = "";
 
 void main() {
   AppDatabase myDB = AppDatabase();
-  ChopperClient client = ChopperClient(
-    baseUrl: "https://api.sarrin.tech",
-    interceptors: [
-      HttpLoggingInterceptor(),
-    ],
-    converter: BuiltValueConverter(),
-  );
+
   runApp(MultiProvider(
     providers: [
       Provider(
-        create: (_) => TenantApiService.create(client),
-      ),
-      Provider(
-        create: (_) => UnitApiService.create(client),
-      ),
-      Provider(
-        create: (_) => PaymentApiService.create(client),
+        create: (_) => MyChopperClient.client,
       ),
       Provider(
         create: (_) => myDB.paymentDao,
@@ -54,6 +44,9 @@ void main() {
       Provider(
         create: (_) => myDB.kinDao,
       ),
+      ChangeNotifierProvider(
+        create: (_) => TenantChangeNotifier(),
+      ),
     ],
     child: MyApp(),
   ));
@@ -67,82 +60,111 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        myRights: (context) => MyRights(),
-        rulesBook: (context) => RulesBook(),
-        termsAndConditions: (context) => TermsAndConditionsTab(),
-        houseListingPage: (context) => HousesAvailable(),
-        createEditProfile: (context) => CreateEditProfile(),
-        mainPage: (context) => MainPage(),
-      },
-      title: 'Sarrin Rental',
-      theme: ThemeData(
-        fontFamily: 'PTSans',
-        appBarTheme: AppBarTheme(
-          color: Palette.primaryBackground,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          fillColor: Palette.paymentCardColor,
-          filled: true,
-        ),
-        scaffoldBackgroundColor: Colors.white,
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Palette.primaryBackground,
-          selectedIconTheme: IconThemeData(color: Colors.white),
-          unselectedIconTheme: IconThemeData(color: Color(0xffA8DADC)),
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          unselectedItemColor: Color(0xffA8DADC),
-          selectedItemColor: Colors.white,
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.all(15.0),
-            primary: Colors.white60,
-            backgroundColor: Palette.buttonBackGround,
-            onSurface: Color(0xffBD5940),
-            elevation: 0.0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        routes: {
+          myRights: (_) => MyRights(),
+          rulesBook: (_) => RulesBook(),
+          termsAndConditions: (_) => TermsAndConditionsTab(),
+          houseListingPage: (_) => HousesAvailable(),
+          createEditProfile: (_) => CreateEditProfile(),
+          mainPage: (context) => MainPage(),
+        },
+        title: 'Sarrin Rental',
+        theme: ThemeData(
+          fontFamily: 'PTSans',
+          appBarTheme: AppBarTheme(
+            color: Palette.primaryBackground,
           ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            padding: EdgeInsets.all(15.0),
-            backgroundColor: Colors.grey[300],
-            onSurface: Color(0xffBD5940),
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            side: BorderSide(
-              width: 2,
-              color: Colors.brown[200],
+          inputDecorationTheme: InputDecorationTheme(
+            fillColor: Palette.paymentCardColor,
+            filled: true,
+          ),
+          scaffoldBackgroundColor: Colors.white,
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Palette.primaryBackground,
+            selectedIconTheme: IconThemeData(color: Colors.white),
+            unselectedIconTheme: IconThemeData(color: Color(0xffA8DADC)),
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            unselectedItemColor: Color(0xffA8DADC),
+            selectedItemColor: Colors.white,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(15.0),
+              primary: Colors.white60,
+              backgroundColor: Palette.buttonBackGround,
+              onSurface: Color(0xffBD5940),
+              elevation: 0.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
             ),
           ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              padding: EdgeInsets.all(15.0),
+              backgroundColor: Colors.grey[300],
+              onSurface: Color(0xffBD5940),
+              elevation: 0.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              side: BorderSide(
+                width: 2,
+                color: Colors.brown[200],
+              ),
+            ),
+          ),
         ),
-      ),
-      debugShowCheckedModeBanner: true,
-      home: MySplashScreen(
-        backgroundColor: Colors.white,
-        loaderColor: Colors.yellow,
-        image: Image.asset("assets/images/icon.jpg"),
-        photoSize: 100.0,
-        navigateAfterFuture: checkIfInitialTenantExist(
-            Provider.of<TenantDao>(context, listen: false)),
-      ),
-    );
+        debugShowCheckedModeBanner: true,
+        home: MySplashScreen(
+          backgroundColor: Colors.white,
+          loaderColor: Colors.yellow,
+          image: Image.asset("assets/images/icon.jpg"),
+          photoSize: 100.0,
+          navigateAfterFuture: checkIfInitialTenantExist(
+              tenantDao: Provider.of<TenantDao>(context, listen: false),
+              paymentDao: Provider.of<PaymentDao>(context, listen: false),
+              unitDao: Provider.of<UnitDao>(context, listen: false),
+              notificationDao:
+                  Provider.of<NotificationDao>(context, listen: false),
+              buildContext: context),
+        ));
   }
 
-  Future<dynamic> checkIfInitialTenantExist(TenantDao tenantDao) async {
+  Future<dynamic> checkIfInitialTenantExist(
+      {TenantDao tenantDao,
+      UnitDao unitDao,
+      NotificationDao notificationDao,
+      PaymentDao paymentDao,
+      BuildContext buildContext}) async {
     var initialTenant = await tenantDao.tenantsGenerated().getSingle();
     log.d('the local tenant is .............................');
 
     if (initialTenant == null) {
       log.d('NOBODY');
+      Provider.of<TenantChangeNotifier>(buildContext, listen: false)
+          .updateServiceId("guest");
       return '/createEditProfile';
     } else {
       log.d(initialTenant.firstName);
+      try {
+        //fetch from api
+        var response = await TenantApiService.create(
+                "?idNumber=eq.$initialTenant.idNumber",
+                Provider.of<ChopperClient>(buildContext, listen: false))
+            .getTenant();
+        BuiltTenant responseTenant = response.body;
+
+        //write to db
+        await tenantDao.updateTenant(initialTenant.copyWith(
+          firstName: responseTenant.firstName,
+          lastName: responseTenant.lastName,
+          idNumber: responseTenant.idNumber,
+          occupation: responseTenant.occupation,
+          emailAddress: responseTenant.emailAdress,
+          phoneNumber: responseTenant.telephoneNumber,
+        ));
+      } catch (e) {}
       return '/mainPage';
     }
   }

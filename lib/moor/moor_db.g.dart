@@ -10,7 +10,7 @@ part of 'moor_db.dart';
 class Tenant extends DataClass implements Insertable<Tenant> {
   final String firstName;
   final String lastName;
-  final String idNumber;
+  final int idNumber;
   final String emailAddress;
   final String phoneNumber;
   final String occupation;
@@ -25,13 +25,14 @@ class Tenant extends DataClass implements Insertable<Tenant> {
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
     return Tenant(
       firstName: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}first_name']),
       lastName: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}last_name']),
-      idNumber: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_number']),
+      idNumber:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_number']),
       emailAddress: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}email_address']),
       phoneNumber: stringType
@@ -50,7 +51,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
       map['last_name'] = Variable<String>(lastName);
     }
     if (!nullToAbsent || idNumber != null) {
-      map['id_number'] = Variable<String>(idNumber);
+      map['id_number'] = Variable<int>(idNumber);
     }
     if (!nullToAbsent || emailAddress != null) {
       map['email_address'] = Variable<String>(emailAddress);
@@ -93,7 +94,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
     return Tenant(
       firstName: serializer.fromJson<String>(json['firstName']),
       lastName: serializer.fromJson<String>(json['lastName']),
-      idNumber: serializer.fromJson<String>(json['idNumber']),
+      idNumber: serializer.fromJson<int>(json['idNumber']),
       emailAddress: serializer.fromJson<String>(json['emailAddress']),
       phoneNumber: serializer.fromJson<String>(json['phoneNumber']),
       occupation: serializer.fromJson<String>(json['occupation']),
@@ -103,11 +104,11 @@ class Tenant extends DataClass implements Insertable<Tenant> {
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'firstName': serializer.toJson<String>(firstName),
-      'lastName': serializer.toJson<String>(lastName),
-      'idNumber': serializer.toJson<String>(idNumber),
-      'emailAddress': serializer.toJson<String>(emailAddress),
-      'phoneNumber': serializer.toJson<String>(phoneNumber),
+      'first_name': serializer.toJson<String>(firstName),
+      'other_name': serializer.toJson<String>(lastName),
+      'id_number': serializer.toJson<int>(idNumber),
+      'email': serializer.toJson<String>(emailAddress),
+      'mobile_number': serializer.toJson<String>(phoneNumber),
       'occupation': serializer.toJson<String>(occupation),
     };
   }
@@ -115,7 +116,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
   Tenant copyWith(
           {String firstName,
           String lastName,
-          String idNumber,
+          int idNumber,
           String emailAddress,
           String phoneNumber,
           String occupation}) =>
@@ -164,7 +165,7 @@ class Tenant extends DataClass implements Insertable<Tenant> {
 class TenantsCompanion extends UpdateCompanion<Tenant> {
   final Value<String> firstName;
   final Value<String> lastName;
-  final Value<String> idNumber;
+  final Value<int> idNumber;
   final Value<String> emailAddress;
   final Value<String> phoneNumber;
   final Value<String> occupation;
@@ -179,18 +180,17 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
   TenantsCompanion.insert({
     @required String firstName,
     @required String lastName,
-    @required String idNumber,
+    this.idNumber = const Value.absent(),
     this.emailAddress = const Value.absent(),
     @required String phoneNumber,
     this.occupation = const Value.absent(),
   })  : firstName = Value(firstName),
         lastName = Value(lastName),
-        idNumber = Value(idNumber),
         phoneNumber = Value(phoneNumber);
   static Insertable<Tenant> custom({
     Expression<String> firstName,
     Expression<String> lastName,
-    Expression<String> idNumber,
+    Expression<int> idNumber,
     Expression<String> emailAddress,
     Expression<String> phoneNumber,
     Expression<String> occupation,
@@ -208,7 +208,7 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
   TenantsCompanion copyWith(
       {Value<String> firstName,
       Value<String> lastName,
-      Value<String> idNumber,
+      Value<int> idNumber,
       Value<String> emailAddress,
       Value<String> phoneNumber,
       Value<String> occupation}) {
@@ -232,7 +232,7 @@ class TenantsCompanion extends UpdateCompanion<Tenant> {
       map['last_name'] = Variable<String>(lastName.value);
     }
     if (idNumber.present) {
-      map['id_number'] = Variable<String>(idNumber.value);
+      map['id_number'] = Variable<int>(idNumber.value);
     }
     if (emailAddress.present) {
       map['email_address'] = Variable<String>(emailAddress.value);
@@ -289,11 +289,11 @@ class $TenantsTable extends Tenants with TableInfo<$TenantsTable, Tenant> {
   }
 
   final VerificationMeta _idNumberMeta = const VerificationMeta('idNumber');
-  GeneratedTextColumn _idNumber;
+  GeneratedIntColumn _idNumber;
   @override
-  GeneratedTextColumn get idNumber => _idNumber ??= _constructIdNumber();
-  GeneratedTextColumn _constructIdNumber() {
-    return GeneratedTextColumn(
+  GeneratedIntColumn get idNumber => _idNumber ??= _constructIdNumber();
+  GeneratedIntColumn _constructIdNumber() {
+    return GeneratedIntColumn(
       'id_number',
       $tableName,
       false,
@@ -369,8 +369,6 @@ class $TenantsTable extends Tenants with TableInfo<$TenantsTable, Tenant> {
     if (data.containsKey('id_number')) {
       context.handle(_idNumberMeta,
           idNumber.isAcceptableOrUnknown(data['id_number'], _idNumberMeta));
-    } else if (isInserting) {
-      context.missing(_idNumberMeta);
     }
     if (data.containsKey('email_address')) {
       context.handle(

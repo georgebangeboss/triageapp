@@ -7,9 +7,11 @@ part of 'chopper_api_services.dart';
 // **************************************************************************
 
 class _$UnitApiService extends UnitApiService {
-  _$UnitApiService([ChopperClient client]) {
+  String idNumberConcat;
+  _$UnitApiService(String idNumberConcat, ChopperClient client) {
     if (client == null) return;
     this.client = client;
+    this.idNumberConcat = idNumberConcat;
   }
 
   @override
@@ -17,7 +19,7 @@ class _$UnitApiService extends UnitApiService {
 
   @override
   Future<Response<BuiltUnit>> getUnit([String tenantServiceId]) {
-    final $url = '/apartment';
+    final $url = '/unit${this.idNumberConcat}';
     final $headers = {'uniqueServiceId': tenantServiceId};
     final $request = Request('GET', $url, client.baseUrl, headers: $headers);
     return client.send<BuiltUnit, BuiltUnit>($request);
@@ -25,9 +27,11 @@ class _$UnitApiService extends UnitApiService {
 }
 
 class _$TenantApiService extends TenantApiService {
-  _$TenantApiService([ChopperClient client]) {
+  String idNumberConcat;
+  _$TenantApiService(String idNumberConcat, ChopperClient client) {
     if (client == null) return;
     this.client = client;
+    this.idNumberConcat = idNumberConcat;
   }
 
   @override
@@ -35,14 +39,14 @@ class _$TenantApiService extends TenantApiService {
 
   @override
   Future<Response<BuiltTenant>> getTenant([String tenantServiceId]) {
-    final $url = '/tenant';
+    final $url = '/tenant${this.idNumberConcat}';
     final $headers = {'uniqueServiceId': tenantServiceId};
     final $request = Request('GET', $url, client.baseUrl, headers: $headers);
     return client.send<BuiltTenant, BuiltTenant>($request);
   }
 
   @override
-  Future<Response<dynamic>> updateTenant(Map<String, String> body,
+  Future<Response<dynamic>> createNewTenant(BuiltTenant body,
       [String tenantServiceId]) {
     final $url = '/tenant';
     final $headers = {'uniqueServiceId': tenantServiceId};
@@ -51,12 +55,25 @@ class _$TenantApiService extends TenantApiService {
         Request('PUT', $url, client.baseUrl, body: $body, headers: $headers);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> updateTenant(BuiltTenant body,
+      [String tenantServiceId]) {
+    final $url = '/tenant${this.idNumberConcat}';
+    final $headers = {'uniqueServiceId': tenantServiceId};
+    final $body = body;
+    final $request =
+        Request('PATCH', $url, client.baseUrl, body: $body, headers: $headers);
+    return client.send<dynamic, dynamic>($request);
+  }
 }
 
 class _$PaymentApiService extends PaymentApiService {
-  _$PaymentApiService([ChopperClient client]) {
+  String idNumberConcat;
+  _$PaymentApiService(String idNumberConcat, ChopperClient client) {
     if (client == null) return;
     this.client = client;
+    this.idNumberConcat = idNumberConcat;
   }
 
   @override
@@ -64,7 +81,27 @@ class _$PaymentApiService extends PaymentApiService {
 
   @override
   Future<Response<BuiltPayment>> getPayments([String tenantServiceId]) {
-    final $url = '/payment';
+    final $url = '/payment${this.idNumberConcat}';
+    final $headers = {'uniqueServiceId': tenantServiceId};
+    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    return client.send<BuiltPayment, BuiltPayment>($request);
+  }
+}
+
+class _$NotificationApiService extends NotificationApiService {
+  String idNumberConcat;
+  _$NotificationApiService(String idNumberConcat, ChopperClient client) {
+    if (client == null) return;
+    this.client = client;
+    this.idNumberConcat = idNumberConcat;
+  }
+
+  @override
+  final definitionType = NotificationApiService;
+
+  @override
+  Future<Response<BuiltPayment>> getNotifications([String tenantServiceId]) {
+    final $url = '/notification${this.idNumberConcat}';
     final $headers = {'uniqueServiceId': tenantServiceId};
     final $request = Request('GET', $url, client.baseUrl, headers: $headers);
     return client.send<BuiltPayment, BuiltPayment>($request);

@@ -7,7 +7,7 @@ class Tenants extends Table {
 
   TextColumn get lastName => text()();
 
-  TextColumn get idNumber => text()();
+  IntColumn get idNumber => integer()();
 
   TextColumn get emailAddress => text().nullable()();
 
