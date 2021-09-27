@@ -401,11 +401,13 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                       ..idNumber = dbTenant.idNumber
                                       ..occupation = dbTenant.occupation
                                       ..emailAdress = dbTenant.emailAddress);
-                                await TenantApiService.create(
-                                        "?idNumber=eq.$dbTenant.idNumber",
+                                var response = await TenantApiService.create(
                                         Provider.of<ChopperClient>(context,
                                             listen: false))
-                                    .updateTenant(existingApiTenant);
+                                    .updateTenant(
+                                        "?id_number=eq.${dbTenant.idNumber}",
+                                        existingApiTenant);
+                                print(response.body);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -424,9 +426,6 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                     emailAddress: _tenantEmail.trim(),
                                     idNumber: int.parse(_tenantIDNumber.trim()),
                                   );
-
-                                  await tenantDao.insertTenant(
-                                      newTenant.toCompanion(true));
                                   BuiltTenant newApiTenant = BuiltTenant(
                                       (builder) => builder
                                         ..firstName = newTenant.firstName
@@ -435,12 +434,24 @@ class _CreateEditProfileState extends State<CreateEditProfile> {
                                             newTenant.phoneNumber
                                         ..idNumber = newTenant.idNumber
                                         ..occupation = newTenant.occupation
-                                        ..emailAdress = newTenant.emailAddress);
-                                  await TenantApiService.create(
-                                          "?idNumber=eq.$newTenant.idNumber",
+                                        ..emailAdress = newTenant.emailAddress
+                                        ..account = 285564.00
+                                        ..propertyId = 1
+                                        ..nok = "Frank"
+                                        ..nokMobile = "0727273157"
+                                        ..nokRelationship = "bro"
+                                        ..gender = "male"
+                                        ..balance = 500.00
+                                        ..dob = "9/7/99");
+
+                                  await tenantDao.insertTenant(
+                                      newTenant.toCompanion(true));
+                                  var response = await TenantApiService.create(
                                           Provider.of<ChopperClient>(context,
                                               listen: false))
                                       .createNewTenant(newApiTenant);
+                                  print(response.body);
+
                                   Navigator.of(context)
                                       .pushReplacementNamed(mainPage);
                                 }

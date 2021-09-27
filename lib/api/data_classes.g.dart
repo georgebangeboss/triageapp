@@ -93,7 +93,7 @@ class _$BuiltTenantSerializer implements StructuredSerializer<BuiltTenant> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.nokRelationShip;
+    value = object.nokRelationship;
     if (value != null) {
       result
         ..add('nok_relationship')
@@ -104,13 +104,15 @@ class _$BuiltTenantSerializer implements StructuredSerializer<BuiltTenant> {
     if (value != null) {
       result
         ..add('balance')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
     }
     value = object.account;
     if (value != null) {
       result
         ..add('account')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
     }
     value = object.propertyId;
     if (value != null) {
@@ -173,16 +175,16 @@ class _$BuiltTenantSerializer implements StructuredSerializer<BuiltTenant> {
               specifiedType: const FullType(String)) as String;
           break;
         case 'nok_relationship':
-          result.nokRelationShip = serializers.deserialize(value,
+          result.nokRelationship = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'balance':
           result.balance = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(double)) as double;
           break;
         case 'account':
           result.account = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(double)) as double;
           break;
         case 'property_id':
           result.propertyId = serializers.deserialize(value,
@@ -419,11 +421,11 @@ class _$BuiltTenant extends BuiltTenant {
   @override
   final String nokMobile;
   @override
-  final String nokRelationShip;
+  final String nokRelationship;
   @override
-  final int balance;
+  final double balance;
   @override
-  final int account;
+  final double account;
   @override
   final int propertyId;
 
@@ -441,7 +443,7 @@ class _$BuiltTenant extends BuiltTenant {
       this.occupation,
       this.nok,
       this.nokMobile,
-      this.nokRelationShip,
+      this.nokRelationship,
       this.balance,
       this.account,
       this.propertyId})
@@ -468,7 +470,7 @@ class _$BuiltTenant extends BuiltTenant {
         occupation == other.occupation &&
         nok == other.nok &&
         nokMobile == other.nokMobile &&
-        nokRelationShip == other.nokRelationShip &&
+        nokRelationship == other.nokRelationship &&
         balance == other.balance &&
         account == other.account &&
         propertyId == other.propertyId;
@@ -500,7 +502,7 @@ class _$BuiltTenant extends BuiltTenant {
                                 occupation.hashCode),
                             nok.hashCode),
                         nokMobile.hashCode),
-                    nokRelationShip.hashCode),
+                    nokRelationship.hashCode),
                 balance.hashCode),
             account.hashCode),
         propertyId.hashCode));
@@ -519,7 +521,7 @@ class _$BuiltTenant extends BuiltTenant {
           ..add('occupation', occupation)
           ..add('nok', nok)
           ..add('nokMobile', nokMobile)
-          ..add('nokRelationShip', nokRelationShip)
+          ..add('nokRelationship', nokRelationship)
           ..add('balance', balance)
           ..add('account', account)
           ..add('propertyId', propertyId))
@@ -571,18 +573,18 @@ class BuiltTenantBuilder implements Builder<BuiltTenant, BuiltTenantBuilder> {
   String get nokMobile => _$this._nokMobile;
   set nokMobile(String nokMobile) => _$this._nokMobile = nokMobile;
 
-  String _nokRelationShip;
-  String get nokRelationShip => _$this._nokRelationShip;
-  set nokRelationShip(String nokRelationShip) =>
-      _$this._nokRelationShip = nokRelationShip;
+  String _nokRelationship;
+  String get nokRelationship => _$this._nokRelationship;
+  set nokRelationship(String nokRelationship) =>
+      _$this._nokRelationship = nokRelationship;
 
-  int _balance;
-  int get balance => _$this._balance;
-  set balance(int balance) => _$this._balance = balance;
+  double _balance;
+  double get balance => _$this._balance;
+  set balance(double balance) => _$this._balance = balance;
 
-  int _account;
-  int get account => _$this._account;
-  set account(int account) => _$this._account = account;
+  double _account;
+  double get account => _$this._account;
+  set account(double account) => _$this._account = account;
 
   int _propertyId;
   int get propertyId => _$this._propertyId;
@@ -603,7 +605,7 @@ class BuiltTenantBuilder implements Builder<BuiltTenant, BuiltTenantBuilder> {
       _occupation = $v.occupation;
       _nok = $v.nok;
       _nokMobile = $v.nokMobile;
-      _nokRelationShip = $v.nokRelationShip;
+      _nokRelationship = $v.nokRelationship;
       _balance = $v.balance;
       _account = $v.account;
       _propertyId = $v.propertyId;
@@ -637,7 +639,7 @@ class BuiltTenantBuilder implements Builder<BuiltTenant, BuiltTenantBuilder> {
             occupation: occupation,
             nok: nok,
             nokMobile: nokMobile,
-            nokRelationShip: nokRelationShip,
+            nokRelationship: nokRelationship,
             balance: balance,
             account: account,
             propertyId: propertyId);

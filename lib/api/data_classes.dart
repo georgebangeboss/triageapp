@@ -35,13 +35,13 @@ abstract class BuiltTenant implements Built<BuiltTenant, BuiltTenantBuilder> {
   String get nokMobile;
   @BuiltValueField(wireName: "nok_relationship")
   @nullable
-  String get nokRelationShip;
+  String get nokRelationship;
   @BuiltValueField(wireName: "balance")
   @nullable
-  int get balance;
+  double get balance;
   @BuiltValueField(wireName: "account")
   @nullable
-  int get account;
+  double get account;
   @BuiltValueField(wireName: "property_id")
   @nullable
   int get propertyId;

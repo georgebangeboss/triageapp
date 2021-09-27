@@ -1,52 +1,47 @@
 import 'package:chopper/chopper.dart';
 import 'package:rental_ui/api/data_classes.dart';
+import 'package:built_collection/built_collection.dart';
 
 part 'chopper_api_services.chopper.dart';
 
 @ChopperApi(baseUrl: "/unit")
 abstract class UnitApiService extends ChopperService {
   @Get()
-  Future<Response<BuiltUnit>> getUnit(
-      [@Header('uniqueServiceId') String tenantServiceId]);
-  static UnitApiService create(String idNumberConcat, ChopperClient client) =>
-      _$UnitApiService(idNumberConcat, client);
+  Future<Response<BuiltList<BuiltUnit>>> getUnit();
+  static UnitApiService create(ChopperClient client) =>
+      _$UnitApiService(client);
 }
 
 @ChopperApi(baseUrl: "/tenant")
 abstract class TenantApiService extends ChopperService {
-  @Get()
-  Future<Response<BuiltTenant>> getTenant(
-      [@Header('uniqueServiceId') String tenantServiceId]);
+  @Get(path: '{idNumber}')
+  Future<Response<BuiltList<BuiltTenant>>> getTenants(
+      @Path('idNumber') String idNumberConcat);
 
-  @Put()
-  Future<Response> createNewTenant(@Body() BuiltTenant body,
-      [@Header('uniqueServiceId') String tenantServiceId]);
+  @Post()
+  Future<Response<dynamic>> createNewTenant(@Body() BuiltTenant body);
 
-  @Patch()
-  Future<Response> updateTenant(@Body() BuiltTenant body,
-      [@Header('uniqueServiceId') String tenantServiceId]);
-  static TenantApiService create(String idNumberConcat, ChopperClient client) =>
-      _$TenantApiService(idNumberConcat, client);
+  @Patch(path: '{idNumber}')
+  Future<Response<dynamic>> updateTenant(
+      @Path('idNumber') String idNumberConcat, @Body() BuiltTenant body);
+  static TenantApiService create(ChopperClient client) =>
+      _$TenantApiService(client);
 }
 
 @ChopperApi(baseUrl: "/payment")
 abstract class PaymentApiService extends ChopperService {
   @Get()
-  Future<Response<BuiltPayment>> getPayments(
-      [@Header('uniqueServiceId') String tenantServiceId]);
+  Future<Response<BuiltList<BuiltPayment>>> getPayments();
 
-  static PaymentApiService create(
-          String idNumberConcat, ChopperClient client) =>
-      _$PaymentApiService(idNumberConcat, client);
+  static PaymentApiService create(ChopperClient client) =>
+      _$PaymentApiService(client);
 }
 
 @ChopperApi(baseUrl: "/notification")
 abstract class NotificationApiService extends ChopperService {
   @Get()
-  Future<Response<BuiltPayment>> getNotifications(
-      [@Header('uniqueServiceId') String tenantServiceId]);
+  Future<Response<BuiltPayment>> getNotifications();
 
-  static PaymentApiService create(
-          String idNumberConcat, ChopperClient client) =>
-      _$PaymentApiService(idNumberConcat, client);
+  static PaymentApiService create(ChopperClient client) =>
+      _$PaymentApiService(client);
 }

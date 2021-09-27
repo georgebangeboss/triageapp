@@ -33,9 +33,13 @@ class BuiltValueConverter extends JsonConverter {
   }
 
   @override
-  Request convertRequest(Request request) => super.convertRequest(
-        request.copyWith(
-          body: serializers.serialize(request.body),
-        ),
-      );
+  Request convertRequest(Request request) {
+    print(serializers.serialize(request.body));
+    return super.convertRequest(request.copyWith(
+      body: serializers.serializeWith(
+        serializers.serializerForType(request.body.runtimeType),
+        request.body,
+      ),
+    ));
+  }
 }

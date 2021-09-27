@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:rental_ui/api/data_classes.dart';
 import 'package:rental_ui/api/my_chopper_client.dart';
 import 'package:rental_ui/config/Palette.dart';
 import 'package:rental_ui/logger/log_printer.dart';
@@ -23,11 +24,16 @@ const savedSecret = "";
 
 void main() {
   AppDatabase myDB = AppDatabase();
-
+  HttpClient client = HttpClient(
+    
+  );
   runApp(MultiProvider(
     providers: [
       Provider(
         create: (_) => MyChopperClient.client,
+      ),
+      Provider(
+        create: (_) => client,
       ),
       Provider(
         create: (_) => myDB.paymentDao,
@@ -138,22 +144,20 @@ class MyApp extends StatelessWidget {
       PaymentDao paymentDao,
       BuildContext buildContext}) async {
     var initialTenant = await tenantDao.tenantsGenerated().getSingle();
-    log.d('the local tenant is .............................');
 
     if (initialTenant == null) {
-      log.d('NOBODY');
       Provider.of<TenantChangeNotifier>(buildContext, listen: false)
           .updateServiceId("guest");
       return '/createEditProfile';
     } else {
-      log.d(initialTenant.firstName);
       try {
         //fetch from api
         var response = await TenantApiService.create(
-                "?idNumber=eq.$initialTenant.idNumber",
                 Provider.of<ChopperClient>(buildContext, listen: false))
-            .getTenant();
-        BuiltTenant responseTenant = response.body;
+            .getTenants("?id_number=eq.${initialTenant.idNumber}");
+        var responseTenant = response.body.first;
+
+        print(responseTenant.firstName);
 
         //write to db
         await tenantDao.updateTenant(initialTenant.copyWith(

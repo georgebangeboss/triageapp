@@ -104,11 +104,11 @@ class Tenant extends DataClass implements Insertable<Tenant> {
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'first_name': serializer.toJson<String>(firstName),
-      'other_name': serializer.toJson<String>(lastName),
-      'id_number': serializer.toJson<int>(idNumber),
-      'email': serializer.toJson<String>(emailAddress),
-      'mobile_number': serializer.toJson<String>(phoneNumber),
+      'firstName': serializer.toJson<String>(firstName),
+      'lastName': serializer.toJson<String>(lastName),
+      'idNumber': serializer.toJson<int>(idNumber),
+      'emailAddress': serializer.toJson<String>(emailAddress),
+      'phoneNumber': serializer.toJson<String>(phoneNumber),
       'occupation': serializer.toJson<String>(occupation),
     };
   }

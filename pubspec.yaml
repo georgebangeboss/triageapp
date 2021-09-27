@@ -35,8 +35,9 @@ dependencies:
   connectivity: ^2.0.2
   moor_flutter: ^3.1.0
   chopper: ^3.0.6
-  built_value: ^8.0.4
+  #built_value: ^8.0.4
   logger: ^0.9.4
+  http: ^0.13.1
 
 dev_dependencies:
   flutter_test:
